@@ -1,0 +1,23 @@
+# Ignorar checkpoints do Jupyter
+.ipynb_checkpoints/
+
+# Ignorar arquivos compilados do Python
+__pycache__/
+*.pyc
+
+# Ignorar arquivos de modelos salvos
+*.pkl
+*.joblib
+*.h5
+
+# Ignorar arquivos temporários ou de backup
+*.swp
+*.tmp
+*.bak
+
+# Ignorar variáveis de ambiente e configurações locais
+.env
+*.env
+
+# Ignorar arquivos de apresentações temporários
+*.pptx~

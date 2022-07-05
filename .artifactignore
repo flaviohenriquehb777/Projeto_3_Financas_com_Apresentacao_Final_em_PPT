@@ -1,0 +1,13 @@
+# Excluir conteúdos que não fazem parte do site estático
+.git/
+.github/
+src/
+notebooks/
+ppt/
+dados/
+requirements.txt
+LICENSE.md
+README.md
+
+# Mantém a raiz e a pasta dashboard (index e htmls)
+# (por padrão, apenas não listamos exclusões para 'index.html' e 'dashboard/')
