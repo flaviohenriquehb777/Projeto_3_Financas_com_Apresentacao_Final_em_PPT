@@ -1,6 +1,6 @@
 # Projeto_3_Financas_com_Apresentacao_Final_em_PPT<br>
 
-## Criando uma apresentação executiva a partir da análise finenceira da empresa. <br><br>
+## Criando uma apresentação executiva a partir da análise financeira da empresa. <br><br>
 Vamos usar a base de vendas do kaggle disponível em: <br><br>
 https://www.kaggle.com/datasets/rohitsahoo/sales-forecasting <br><br>
 ## O que queremos responder? <br><br>
@@ -8,7 +8,7 @@ https://www.kaggle.com/datasets/rohitsahoo/sales-forecasting <br><br>
 - Qual foi a categoria mais vendida?<br> 
 - Qual foi o item mais vendido?<br><br>
 A partir da manipulação da base de dados:<br><br> 
-- Filtranto; <br>
+- Filtrando; <br>
 - agrupando; <br>
 - transformando tipos de dados; <br>
 - plotando gráficos. <br><br>
