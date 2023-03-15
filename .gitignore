@@ -22,5 +22,8 @@ __pycache__/
 # Ignorar arquivos de apresentações temporários
 *.pptx~
 
-# Ignorar scripts de reescrita de histórico
-tools/rewrite_git_history.py
+# Ignorar ambientes virtuais e arquivos do sistema
+.venv/
+.DS_Store
+Thumbs.db
+*.log

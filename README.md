@@ -78,9 +78,9 @@ A análise foi conduzida de forma meticulosa, seguindo os seguintes passos no no
 5.  **Visualização de Dados:** Geração de gráficos (com bibliotecas como Matplotlib e Seaborn) para ilustrar tendências de vendas, desempenho de categorias e identificar os produtos mais vendidos.
 6.  **Extração de Insights:** Identificação das respostas para as perguntas chave do projeto, baseadas nas análises e visualizações.
 
-## Dashboard Interativo:
+## Dashboards Interativos:
 
-###  **Nova Funcionalidade: Dashboard de Vendas Interativo**
+###  **Dashboard de Vendas**
 
 O projeto agora inclui um **dashboard web interativo** (dashboard_vendas.html) que permite uma exploração dinâmica e em tempo real dos dados de vendas.
 
@@ -123,12 +123,27 @@ O projeto agora inclui um **dashboard web interativo** (dashboard_vendas.html) q
 3. Clique em "Aplicar Filtros" para atualizar as visualizações
 4. Use os botões de exportação para gerar relatórios
 
+### Dashboard Análise ad hoc
+
+O projeto também inclui um **dashboard de Análise ad hoc** (`dashboard/dashboard_analise_ad_hoc.html`) com foco em exploração direta e seleção dinâmica entre gráficos.
+
+#### Destaques:
+- **Correlação visual entre gráficos**: seleção em um gráfico destaca dados relacionados nos demais.
+- **Reset global**: limpar seleção restaura cores, destaques e estados originais.
+- **Design consistente**: segue o mesmo tema visual e responsivo do dashboard de vendas.
+
+#### Como Usar:
+1. Abra `dashboard_analise_ad_hoc.html` em um navegador moderno.
+2. Interaja com os gráficos (clique/hover) para destacar dados relacionados.
+3. Use os controles de limpar seleção para retornar ao estado inicial.
+
 ### Publicação via GitHub Pages
 
 Como visualizar de forma interativa (sem clonar o repositório):
 
 - Página inicial (landing page): `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/`
 - Dashboard direto: `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html`
+- Dashboard ad hoc: `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_analise_ad_hoc.html`
 
 Observações:
 - A landing page (`dashboard/index.html`, publicada na raiz) tem um botão “Acessar Dashboard”.
@@ -146,6 +161,7 @@ Este site publica o conteúdo da pasta `dashboard` diretamente no branch `gh-pag
 URLs de acesso:
 - Site (index do dashboard): `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/`
 - Dashboard direto: `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html`
+- Dashboard ad hoc: `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_analise_ad_hoc.html`
 
 Se o deploy ficar “pendente” ou “rejected”, aprove o ambiente `github-pages` em “Pages → Deployments” e confirme que o Pages está apontando para `gh-pages/(root)`.
 
@@ -155,7 +171,7 @@ A miniatura apresentada no topo do README usa `dashboard/preview.png` (proporç�
 
 Como gerar/atualizar automaticamente:
 1. Instale Pillow (se necessário): `pip install Pillow`
-2. Execute: `python tools/generate_preview.py`
+2. Execute: `python tools/build/generate_preview.py`
 3. O script salva:
    - `dashboard/preview.png` (1200×630, com a logo integrada)
    - `dashboard/favicon.png` e `dashboard/favicon.ico` (favicons)
@@ -170,8 +186,8 @@ Personalização rápida:
 As páginas `index.html` (landing) e `dashboard_vendas.html` foram atualizadas com metatags **OpenGraph** e **Twitter Cards** apontando para a **logo** em URL absoluto, garantindo a miniatura correta.
 
 - OpenGraph/Twitter: imagem `dashboard/preview.png` (URL absoluto)
-- Favicon: `dashboard/favicon.ico` + variações PNG (16–512) e `dashboard/favicon.png`
-- Geração: `tools/generate_preview.py` cria todas as imagens automaticamente
+- Favicon: `dashboard/favicon_logo.png` como principal, com `dashboard/favicon.png` e `dashboard/favicon.ico` como fallbacks
+- Geração: `tools/build/generate_preview.py` cria todas as imagens automaticamente
 
 ## Resultados Chave e Apresentação:
 
@@ -242,22 +258,9 @@ Para replicar a análise e visualizar a apresentação, siga os passos abaixo:
 - **Apresentação Executiva**
   Abra `ppt/Apresentacao_Executiva.pptx` para revisar a apresentação executiva.
 
-## Padronização de datas dos commits (março/2023)
+## Histórico do projeto (março/2023)
 
-Para manter o histórico do projeto encerrado em março de 2023, utilize os scripts PowerShell na pasta `tools`:
-
-- `tools/commit_march2023.ps1 -Message "sua mensagem" -StageAll` — cria commit com `AUTHOR_DATE` e `COMMITTER_DATE` fixos em 15/03/2023.
-- `tools/commit_march2023.ps1 -Amend` — ajusta a data do último commit para março/2023 sem alterar a mensagem.
-- `tools/verify_commit_dates.ps1 -Count 5` — verifica rapidamente as datas dos últimos commits.
-
-Exemplo:
-
-```powershell
-pwsh tools/commit_march2023.ps1 -Message "Atualiza dashboard ad hoc" -StageAll
-git push origin main
-```
-
-Observação: mantenha esse padrão para todas as alterações neste repositório, pois o projeto foi oficialmente encerrado em março/2023.
+Este projeto foi concluído em março de 2023 e permanece arquivado para fins de portfólio e demonstração. Recomenda-se manter o histórico de commits consistente com esse período, evitando scripts de reescrita de datas no repositório público.
 
 ## Licença:
 
