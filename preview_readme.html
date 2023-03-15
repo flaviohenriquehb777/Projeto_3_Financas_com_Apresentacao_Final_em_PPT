@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview do README.md - Nova Miniatura</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .preview-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .preview-section h3 {
+            color: #4dabf5;
+            margin-top: 0;
+        }
+        .thumbnail-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .thumbnail-container img {
+            max-width: 100%;
+            height: auto;
+            border: 3px solid #4dabf5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .thumbnail-container img:hover {
+            transform: scale(1.05);
+        }
+        .comparison {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .comparison-item {
+            text-align: center;
+            flex: 1;
+            min-width: 300px;
+        }
+        .comparison-item img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+        }
+        .status-list {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .status-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .status-list li {
+            margin: 5px 0;
+            color: #155724;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #4dabf5;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Nova Miniatura do README.md</h1>
+        <p><strong>Agora a miniatura preview.png inclui o logo_miniatura.png!</strong></p>
+        
+        <div class="preview-section">
+            <h3>📸 Nova Miniatura Clicável (preview.png)</h3>
+            <div class="thumbnail-container">
+                <a href="dashboard/dashboard_vendas.html" target="_blank">
+                    <img src="dashboard/preview.png" alt="Abrir Dashboard Interativo" style="max-width: 600px;">
+                </a>
+            </div>
+            <p><strong>Esta é a nova miniatura que aparecerá no README.md</strong></p>
+            <p><em>Clique na imagem acima para testar o link para o dashboard!</em></p>
+            <div class="badge">✅ Inclui logo_miniatura.png</div>
+            <div class="badge">✅ Link funcional</div>
+            <div class="badge">✅ Design atrativo</div>
+        </div>
+
+        <div class="preview-section">
+            <h3>🔄 Comparação: Antes vs Depois</h3>
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>Logo Miniatura Original</h4>
+                    <img src="dashboard/logo_miniatura.png" alt="Logo Miniatura" style="max-width: 200px;">
+                    <p><small>logo_miniatura.png (seu logo)</small></p>
+                </div>
+                <div class="comparison-item">
+                    <h4>Nova Miniatura do Dashboard</h4>
+                    <img src="dashboard/preview.png" alt="Nova Preview" style="max-width: 400px;">
+                    <p><small>preview.png (nova versão com logo)</small></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <h3>📋 Status das Alterações</h3>
+            <div class="status-list">
+                <ul>
+                    <li>✅ README.md restaurado para usar preview.png (formato original)</li>
+                    <li>✅ Nova versão de preview.png criada com logo_miniatura.png incluído</li>
+                    <li>✅ Miniatura clicável funciona corretamente</li>
+                    <li>✅ Link leva ao dashboard no GitHub Pages</li>
+                    <li>✅ Design atrativo com cores do dashboard</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <h3>🚀 Como ficará no GitHub</h3>
+            <p>No README.md do GitHub, a miniatura aparecerá assim:</p>
+            <div style="background: #0d1117; color: #c9d1d9; padding: 20px; border-radius: 8px; font-family: monospace;">
+                <p style="margin: 0;">[![Abrir Dashboard Interativo](dashboard/preview.png)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html)</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

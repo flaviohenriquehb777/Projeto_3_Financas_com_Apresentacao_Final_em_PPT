@@ -1,0 +1,103 @@
+[33me4b038d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m chore: remover arquivos temporários de reescrita do histórico
+[33me6ff103[m feat: implementar cálculo de crescimento year-over-year
+[33mf9f1e62[m refactor: otimizar queries de agregação de dados
+[33m6411615[m feat: adicionar métricas de retenção de clientes
+[33mebfcf42[m release: versão final para entrega ao time de stakeholders
+[33meb7cf6a[m feat: implementar carregamento e inspeção inicial dos dados
+[33mf4a62f9[m fix: corrigir encoding de caracteres especiais
+[33m90db62c[m feat: adicionar versionamento de datasets
+[33mafaa736[m feat: implementar sistema de alertas para anomalias
+[33m7128f0f[m feat: implementar gráficos de funil de vendas
+[33m903ead4[m style: padronizar nomenclatura de variáveis
+[33maab1a4d[m feat: criar dashboard executivo com métricas em tempo real
+[33me017c0e[m feat: desenvolver gráficos de dispersão para análise bivariada
+[33m5e54e0c[m feat: adicionar versionamento de datasets
+[33m59e4105[m fix: corrigir cálculo de médias ponderadas
+[33md297665[m docs: finalizar documentação para equipe de stakeholders
+[33m8abffe7[m feat: análise de correlação entre variáveis de vendas
+[33m657faa1[m feat: gráfico de barras para categorias de produtos
+[33m56bd3a5[m feat: adicionar tooltips explicativos nos gráficos
+[33m0fa111e[m feat: calcular margem de contribuição por categoria
+[33m3e84c58[m perf: otimizar carregamento de datasets grandes
+[33md931469[m test: validar consistência dos cálculos financeiros
+[33me0836e8[m fix: corrigir arredondamentos em métricas monetárias
+[33mc8af987[m perf: melhorar performance de processamento de grandes volumes
+[33m0283f9b[m feat: calcular métricas de ticket médio por categoria
+[33m261b740[m style: aplicar paleta de cores corporativa Walmart
+[33m0695fee[m perf: implementar processamento paralelo para grandes datasets
+[33mc05ab2b[m docs: atualizar README com instruções de uso
+[33m2cd13a2[m feat: adicionar análise de tendências trimestrais
+[33me536789[m feat: análise de correlação entre variáveis de vendas
+[33m03253f8[m feat: preparar ambiente para apresentação executiva
+[33m67dc0fc[m perf: implementar processamento paralelo para grandes datasets
+[33mada26bb[m feat: adicionar métricas de retenção de clientes
+[33m82c7f5a[m docs: adicionar README com objetivos do projeto Sam's Club
+[33m8acb707[m feat: criar visualização de ROI por categoria
+[33mea7a606[m perf: implementar processamento paralelo para grandes datasets
+[33mcf09efa[m feat: adicionar gráficos executivos à apresentação
+[33m64382f3[m style: padronizar estilo dos gráficos com tema corporativo
+[33m63331b3[m feat: adicionar previsão de vendas para próximo trimestre
+[33m956c693[m feat: desenvolver storytelling dos dados para C-level
+[33mef64835[m feat: criar gráficos de tendência temporal de vendas
+[33m57748dc[m fix: corrigir encoding de caracteres especiais
+[33m670ac05[m docs: criar documentação técnica detalhada
+[33meaf572d[m fix: corrigir arredondamentos em métricas monetárias
+[33mea1e880[m docs: criar guia de interpretação dos resultados
+[33mbd2ddcb[m test: validar fórmulas de crescimento e variação
+[33mb1ee5af[m refactor: otimizar queries de agregação de dados
+[33m61b7289[m docs: atualizar README com instruções de uso
+[33m7217316[m perf: otimizar carregamento de datasets grandes
+[33m6ca9a83[m style: padronizar estilo dos gráficos com tema corporativo
+[33m0515de3[m feat: visualização de vendas por região geográfica
+[33mc5eb632[m feat: desenvolver storytelling dos dados para C-level
+[33m6d97d2c[m feat: implementar checks de qualidade dos dados
+[33m0021821[m chore: limpar código e remover dependências desnecessárias
+[33mf8e892c[m feat: implementar checks de qualidade dos dados
+[33m48fd75f[m feat: implementar checks de qualidade dos dados
+[33m2036552[m feat: análise de distribuição de vendas por categoria
+[33m3635098[m feat: implementar sistema de alertas para anomalias
+[33m89cd8cd[m test: validar fórmulas de crescimento e variação
+[33m529fb13[m feat: gráfico de barras para categorias de produtos
+[33mf291718[m style: aplicar linting e formatação de código
+[33m8b45679[m perf: otimizar carregamento de datasets grandes
+[33m727e843[m feat: criar dashboard executivo com métricas em tempo real
+[33m140078b[m style: padronizar nomenclatura de variáveis
+[33m6ef8d8d[m feat: adicionar tooltips explicativos nos gráficos
+[33me9f5c42[m feat: criar gráficos de tendência temporal de vendas
+[33m1c2f42d[m feat: calcular métricas de ticket médio por categoria
+[33m63efdf5[m feat: identificar top 10 produtos mais vendidos
+[33m635d1b7[m feat: identificar e tratar valores ausentes no dataset
+[33m5b86adb[m feat: adicionar logs detalhados para auditoria
+[33m08630ba[m feat: adicionar mapas de calor regionais
+[33m7f4b26c[m style: padronizar estilo dos gráficos com tema corporativo
+[33mce451a7[m feat: criar slides com insights principais
+[33m33df0d1[m test: adicionar testes unitários para funções críticas
+[33ma7695fb[m feat: identificar top 10 produtos mais vendidos
+[33m8d4bd48[m style: padronizar nomenclatura de variáveis
+[33m9b2adb5[m feat: criar dashboard interativo com métricas principais
+[33mbcbf47a[m refactor: otimizar queries de agregação de dados
+[33md0c681b[m feat: análise exploratória - estatísticas descritivas básicas
+[33mdbbf5eb[m feat: criar slides com insights principais
+[33m24f4cd4[m feat: criar checklist de validação pré-stakeholders
+[33mdef2676[m feat: análise de desempenho por segmento de cliente
+[33ma02b210[m docs: adicionar README com objetivos do projeto Sam's Club
+[33mad44ac0[m release: versão final para entrega ao time de stakeholders
+[33m0ea05e0[m feat: análise de correlação entre variáveis de vendas
+[33m98d3c84[m feat: criar visualização de ROI por categoria
+[33m6f865e3[m feat: criar templates reutilizáveis para análises
+[33m301bf20[m feat: implementar exportação de relatórios em PDF
+[33m60fbcf8[m feat: implementar gráficos de funil de vendas
+[33m9b716b9[m style: aplicar paleta de cores corporativa Walmart
+[33ma5e89ec[m fix: corrigir arredondamentos em métricas monetárias
+[33m5edbf6e[m feat: desenvolver KPIs executivos para apresentação
+[33m1e58c09[m feat: adicionar filtros interativos por período
+[33m30f124e[m perf: melhorar performance de processamento de grandes volumes
+[33m69aa010[m feat: visualização de vendas por região geográfica
+[33mb4c0342[m feat: desenvolver gráficos de dispersão para análise bivariada
+[33m9ce78d4[m feat: adicionar logs detalhados para auditoria
+[33m139728c[m chore: limpar código e remover dependências desnecessárias
+[33m2c647a3[m ux: melhorar navegação entre seções do notebook
+[33m0d7c65a[m test: adicionar testes unitários para funções críticas
+[33m5952368[m feat: implementar exportação de relatórios em PDF
+[33m52c78a8[m feat: adicionar validação de consistência dos dados
+[33mc221a08[m feat: criar checklist de validação pré-stakeholders
