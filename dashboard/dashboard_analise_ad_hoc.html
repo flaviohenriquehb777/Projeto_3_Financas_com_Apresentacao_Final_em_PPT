@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard de Análise Ad Hoc</title>
+  <meta name="description" content="Análise ad hoc com gráficos dinâmicos: vendas por ano, mês/ano, categoria/ano, top 10 produtos e produtos mais vendidos por ano. Exportação em PDF com explicações." />
+  <link rel="canonical" href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_analise_ad_hoc.html" />
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:title" content="Dashboard de Análise Ad Hoc" />
+  <meta property="og:description" content="Gráficos interativos e exportação em PDF com análise detalhada de vendas." />
+  <meta property="og:url" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_analise_ad_hoc.html" />
+  <meta property="og:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/preview.png" />
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dashboard de Análise Ad Hoc" />
+  <meta name="twitter:description" content="Gráficos interativos e exportação em PDF com análise detalhada de vendas." />
+  <meta name="twitter:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/preview.png" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./favicon.png?v=2024" sizes="any" />
+  <link rel="icon" type="image/png" href="./logo_miniatura.png?v=2024" sizes="512x512" />
+  <link rel="apple-touch-icon" href="./favicon.png?v=2024" />
+  <!-- Libs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f0f12;
+      --panel: #17171b;
+      --panel-2: #1d1d22;
+      --text: #e6e6e6;
+      --muted: #a6a6ad;
+      --accent: #4f7cf3;
+      --ok: #36c38b;
+      --warn: #f3b04f;
+      --danger: #f35f4f;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif; }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; background: var(--panel); border-bottom: 1px solid #25252b;
+      position: sticky; top: 0; z-index: 10;
+    }
+    header h1 { margin: 0; font-size: 20px; letter-spacing: 0.2px; }
+    .actions { display: flex; gap: 8px; }
+    button {
+      background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 600;
+    }
+    button.secondary { background: var(--panel-2); color: var(--text); border: 1px solid #2a2a30; }
+    main { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+    section.card { background: var(--panel); border: 1px solid #222229; border-radius: 14px; padding: 16px; margin-bottom: 18px; }
+    .card h2 { margin: 0 0 12px; font-size: 18px; }
+    .grid { display: grid; gap: 16px; }
+    .grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    canvas { background: var(--panel-2); border-radius: 10px; padding: 10px; }
+    p.explain { color: var(--muted); line-height: 1.5; margin-top: 10px; }
+    .footer-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .legend { font-size: 12px; color: var(--muted); }
+    @media (max-width: 900px) { .grid.cols-2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dashboard de Análise Ad Hoc</h1>
+    <div class="actions">
+      <button id="btnExport">Exportar PDF</button>
+      <a href="./index.html" style="text-decoration:none"><button class="secondary">Voltar</button></a>
+    </div>
+  </header>
+
+  <main id="content">
+    <!-- Vendas por Ano -->
+    <section class="card">
+      <h2>Total de Vendas por Ano</h2>
+      <canvas id="chartVendasAno" height="120"></canvas>
+      <p id="textoAno" class="explain"></p>
+    </section>
+
+    <!-- Vendas por Mês e Ano -->
+    <section class="card">
+      <h2>Vendas Totais por Mês e Ano</h2>
+      <canvas id="chartMesAno" height="160"></canvas>
+      <p id="textoMesAno" class="explain"></p>
+      <div class="legend">Dica: Passe o mouse para ver valores por mês/ano.</div>
+    </section>
+
+    <!-- Vendas por Categoria e Ano -->
+    <section class="card">
+      <h2>Total de Vendas por Categoria e Ano</h2>
+      <canvas id="chartCategoriaAno" height="140"></canvas>
+      <p id="textoCategoriaAno" class="explain"></p>
+    </section>
+
+    <!-- Top 10 Produtos -->
+    <section class="card">
+      <h2>Top 10 Produtos Mais Vendidos</h2>
+      <canvas id="chartTop10" height="200"></canvas>
+      <p id="textoTop10" class="explain"></p>
+    </section>
+
+    <!-- Produtos Mais Vendidos por Ano -->
+    <section class="card">
+      <h2>Produtos Mais Vendidos por Ano (Top 10 geral)</h2>
+      <canvas id="chartProdutosAno" height="180"></canvas>
+      <p id="textoProdutosAno" class="explain"></p>
+      <div class="footer-note">Os produtos do Top 10 geral são avaliados em cada ano.</div>
+    </section>
+  </main>
+
+  <script>
+    const MONTHS_PT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]; 
+
+    // Utilidades de agrupamento
+    function sumBy(arr, key) {
+      const map = new Map();
+      for (const r of arr) {
+        const k = r[key];
+        const v = Number(r.Sales || r.sales || 0);
+        if (!isFinite(v)) continue;
+        map.set(k, (map.get(k) || 0) + v);
+      }
+      return map;
+    }
+    function sumBy2(arr, keyA, keyB) {
+      const map = new Map();
+      for (const r of arr) {
+        const a = r[keyA];
+        const b = r[keyB];
+        const v = Number(r.Sales || r.sales || 0);
+        if (!isFinite(v)) continue;
+        const mk = `${a}__${b}`;
+        map.set(mk, (map.get(mk) || 0) + v);
+      }
+      return map; // chave combinada a__b -> soma
+    }
+    function toNumber(n) { const v = Number(n); return isFinite(v) ? v : 0; }
+
+    async function loadExcel() {
+      async function fetchBuffer(path) {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`Falha ao baixar ${path}: ${res.status}`);
+        return await res.arrayBuffer();
+      }
+      let buf;
+      try {
+        buf = await fetchBuffer('./baseLimpa.xlsx');
+      } catch (e) {
+        buf = await fetchBuffer('../baseLimpa.xlsx');
+      }
+      const wb = XLSX.read(buf, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { defval: null });
+      // Normaliza colunas esperadas
+      for (const r of rows) {
+        // tenta nomes usuais
+        const dt = r['Order Date'] || r['Data do Pedido'] || r['order_date'] || r['OrderDate'];
+        const d = typeof dt === 'string' || typeof dt === 'number' ? new Date(dt) : (dt instanceof Date ? dt : null);
+        const ano = d && d.getFullYear ? d.getFullYear() : r['Ano'] || r['Year'];
+        let mes = d && d.getMonth ? (d.getMonth() + 1) : r['Mês'] || r['Mes'] || r['Month'];
+        r.Ano = Number(ano);
+        r.Mes = Number(mes);
+        r.Category = r.Category || r['Categoria'] || r['Category Name'] || 'N/A';
+        r['Product Name'] = r['Product Name'] || r['Produto'] || r['Nome do Produto'] || 'Produto';
+        r.Sales = toNumber(r.Sales || r['Vendas'] || r['Sales Amount'] || r['Valor']);
+      }
+      return rows.filter(r => isFinite(r.Ano) && isFinite(r.Mes));
+    }
+
+    function makePalette(n) {
+      const base = ['#4f7cf3','#36c38b','#f3b04f','#f35f4f','#8a5cf3','#4fd2f3','#c36fd1','#7bd36d','#ec7fb4','#8cd3f3','#f38f4f','#5f9cf3'];
+      const out = [];
+      for (let i=0;i<n;i++) out.push(base[i % base.length]);
+      return out;
+    }
+
+    function formatBRL(v) {
+      return (new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })).format(v);
+    }
+
+    async function init() {
+      const data = await loadExcel();
+
+      // 1) Vendas por Ano
+      const vendasAno = Array.from(sumBy(data, 'Ano').entries()).sort((a,b)=>a[0]-b[0]);
+      const anos = vendasAno.map(([k])=>k);
+      const valoresAno = vendasAno.map(([,v])=>v);
+      const anoMax = vendasAno.reduce((acc,cur)=> cur[1]>acc[1]?cur:acc, vendasAno[0]);
+      const ctxAno = document.getElementById('chartVendasAno');
+      new Chart(ctxAno, {
+        type: 'bar',
+        data: { labels: anos, datasets: [{ label: 'Vendas (R$)', data: valoresAno, backgroundColor: '#4f7cf3' }] },
+        options: { plugins: { legend: { labels: { color: '#e6e6e6' } } }, scales: { x: { ticks: { color: '#e6e6e6' } }, y: { ticks: { color: '#e6e6e6' } } } }
+      });
+      document.getElementById('textoAno').textContent = `Maior faturamento em ${anoMax[0]} com ${formatBRL(anoMax[1])}. Tendência anual evidenciada no gráfico.`;
+
+      // 2) Vendas por Mês e Ano
+      const byMesAno = sumBy2(data, 'Mes', 'Ano');
+      const anosUnicos = [...new Set(data.map(r=>r.Ano))].sort();
+      const meses = Array.from({length:12}, (_,i)=>i+1);
+      const datasetsMesAno = anosUnicos.map((ano, idx)=>({
+        label: String(ano),
+        data: meses.map(m => byMesAno.get(`${m}__${ano}`) || 0),
+        borderColor: makePalette(anosUnicos.length)[idx],
+        backgroundColor: makePalette(anosUnicos.length)[idx],
+        fill: false
+      }));
+      const ctxMesAno = document.getElementById('chartMesAno');
+      new Chart(ctxMesAno, { type: 'line', data: { labels: MONTHS_PT, datasets: datasetsMesAno }, options: { plugins: { legend: { labels: { color: '#e6e6e6' } } }, scales: { x: { ticks: { color: '#e6e6e6' } }, y: { ticks: { color: '#e6e6e6' } } } } });
+      // texto: mês/ano pico
+      let pico = { mk: '', v: -Infinity };
+      for (const [mk,v] of byMesAno.entries()) if (v>pico.v) pico = { mk, v };
+      const [mPico, aPico] = pico.mk.split('__').map(x=>Number(x));
+      document.getElementById('textoMesAno').textContent = `Pico de vendas em ${MONTHS_PT[mPico-1]}/${aPico}, totalizando ${formatBRL(pico.v)}.`;
+
+      // 3) Vendas por Categoria e Ano
+      const byCatAno = sumBy2(data, 'Category', 'Ano');
+      const categorias = [...new Set(data.map(r=>r.Category))];
+      const palette = makePalette(anosUnicos.length);
+      const datasetsCategoria = anosUnicos.map((ano, i)=>({
+        label: String(ano),
+        data: categorias.map(c => byCatAno.get(`${c}__${ano}`) || 0),
+        backgroundColor: palette[i]
+      }));
+      const ctxCat = document.getElementById('chartCategoriaAno');
+      new Chart(ctxCat, { type: 'bar', data: { labels: categorias, datasets: datasetsCategoria }, options: { plugins: { legend: { labels: { color: '#e6e6e6' } } }, scales: { x: { ticks: { color: '#e6e6e6' } }, y: { ticks: { color: '#e6e6e6' } } } } });
+      // texto: categoria campeã acumulada
+      const accCat = categorias.map(c => anosUnicos.reduce((s, ano)=> s + (byCatAno.get(`${c}__${ano}`) || 0), 0));
+      const idxMaxCat = accCat.reduce((imax, v, i)=> v>accCat[imax]?i:imax, 0);
+      document.getElementById('textoCategoriaAno').textContent = `Categoria com maior faturamento acumulado: ${categorias[idxMaxCat]} (${formatBRL(accCat[idxMaxCat])}).`;
+
+      // 4) Top 10 Produtos mais vendidos (geral)
+      const byProduto = sumBy(data, 'Product Name');
+      const top10 = Array.from(byProduto.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
+      const ctxTop = document.getElementById('chartTop10');
+      new Chart(ctxTop, { type: 'bar', data: { labels: top10.map(([k])=>k), datasets: [{ label: 'Vendas (R$)', data: top10.map(([,v])=>v), backgroundColor: makePalette(10) }] }, options: { indexAxis:'y', plugins:{ legend:{ labels:{ color:'#e6e6e6' } } }, scales:{ x:{ ticks:{ color:'#e6e6e6' } }, y:{ ticks:{ color:'#e6e6e6' } } } } });
+      document.getElementById('textoTop10').textContent = `Produto líder: ${top10[0][0]} com ${formatBRL(top10[0][1])}.`;
+
+      // 5) Produtos mais vendidos por ano (Top 10 geral pivot)
+      const top10Names = top10.map(([k])=>k);
+      const byProdAno = sumBy2(data.filter(r=> top10Names.includes(r['Product Name'])), 'Product Name', 'Ano');
+      const datasetsProdAno = anosUnicos.map((ano, idx)=>({
+        label: String(ano),
+        data: top10Names.map(p => byProdAno.get(`${p}__${ano}`) || 0),
+        backgroundColor: makePalette(anosUnicos.length)[idx]
+      }));
+      const ctxProdAno = document.getElementById('chartProdutosAno');
+      new Chart(ctxProdAno, { type: 'bar', data: { labels: top10Names, datasets: datasetsProdAno }, options: { plugins: { legend: { labels: { color: '#e6e6e6' } } }, scales: { x: { ticks: { color: '#e6e6e6', autoSkip: false, maxRotation: 30, minRotation: 0 } }, y: { ticks: { color: '#e6e6e6' } } } } });
+      // texto: destaque por ano
+      let destaques = [];
+      for (const ano of anosUnicos) {
+        let melhor = { nome:'', valor: -Infinity };
+        for (const p of top10Names) {
+          const v = byProdAno.get(`${p}__${ano}`) || 0;
+          if (v > melhor.valor) melhor = { nome: p, valor: v };
+        }
+        destaques.push(`${ano}: ${melhor.nome} (${formatBRL(melhor.valor)})`);
+      }
+      document.getElementById('textoProdutosAno').textContent = `Destaques por ano entre o Top 10: ${destaques.join(' · ')}.`;
+
+      // Exportação em PDF (inclui gráficos e textos)
+      const { jsPDF } = window.jspdf;
+      document.getElementById('btnExport').addEventListener('click', async () => {
+        const elem = document.getElementById('content');
+        const canvas = await html2canvas(elem, { scale: 2, background: '#0f0f12' });
+        const img = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p','mm','a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const imgProps = pdf.getImageProperties(img);
+        const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
+        let y = 0;
+        if (imgHeight <= pageHeight) {
+          pdf.addImage(img, 'PNG', 0, 0, pageWidth, imgHeight);
+        } else {
+          // Quebra em múltiplas páginas quando o conteúdo excede
+          let remaining = imgHeight;
+          let position = 0;
+          while (remaining > 0) {
+            pdf.addImage(img, 'PNG', 0, position ? -position : 0, pageWidth, imgHeight);
+            remaining -= pageHeight;
+            position += pageHeight;
+            if (remaining > 0) pdf.addPage();
+          }
+        }
+        pdf.save('dashboard_analise_ad_hoc.pdf');
+      });
+    }
+
+    // Inicializa
+    init().catch(err => {
+      console.error('Falha ao inicializar dashboard:', err);
+      const warn = document.createElement('div');
+      warn.textContent = 'Falha ao carregar dados. Verifique baseLimpa.xlsx.';
+      warn.style.color = '#f35f4f';
+      document.body.appendChild(warn);
+    });
+  </script>
+</body>
+</html>
