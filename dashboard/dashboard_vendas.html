@@ -19,10 +19,10 @@
     <meta name="twitter:description" content="Explore métricas, tendências e categorias com filtros avançados e exportação." />
     <meta name="twitter:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/preview.png" />
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="./favicon.png?v=2024" sizes="any" />
-    <link rel="icon" type="image/png" href="./logo_miniatura.png?v=2024" sizes="512x512" />
-    <link rel="apple-touch-icon" href="./favicon.png?v=2024" />
+    <link rel="icon" type="image/png" href="./favicon_logo.png?v=2025" sizes="any" />
+    <link rel="apple-touch-icon" type="image/png" href="./favicon_logo.png?v=2025" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- Bibliotecas para exportação de PDF -->
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -583,8 +583,7 @@
     </div>
 
     <script>
-        // Dados de exemplo baseados na estrutura fornecida
-        const salesData = [
+        let salesData = [
             { id: 1, orderId: "CA-2017-152156", orderDate: "2017-11-08", shipDate: "2017-11-11", shipMode: "Second Class", customerId: "CG-12520", customerName: "Claire Gute", segment: "Consumer", country: "United States", city: "Henderson", state: "Kentucky", postalCode: "42420", region: "South", productId: "FUR-BO-10001798", category: "Furniture", subCategory: "Bookcases", productName: "Bush Somerset Collection Bookcase", sales: 261.96, year: 2017, month: 11 },
             { id: 2, orderId: "CA-2017-152156", orderDate: "2017-11-08", shipDate: "2017-11-11", shipMode: "Second Class", customerId: "CG-12520", customerName: "Claire Gute", segment: "Consumer", country: "United States", city: "Henderson", state: "Kentucky", postalCode: "42420", region: "South", productId: "FUR-CH-10000454", category: "Furniture", subCategory: "Chairs", productName: "Hon Deluxe Fabric Upholstered Stacking Chairs, Rounded Back", sales: 731.94, year: 2017, month: 11 },
             { id: 3, orderId: "CA-2017-138688", orderDate: "2017-06-12", shipDate: "2017-06-16", shipMode: "Second Class", customerId: "DV-13045", customerName: "Darrin Van Huff", segment: "Corporate", country: "United States", city: "Los Angeles", state: "California", postalCode: "90036", region: "West", productId: "OFF-LA-10000240", category: "Office Supplies", subCategory: "Labels", productName: "Self-Adhesive Address Labels for Typewriters by Universal", sales: 14.62, year: 2017, month: 6 },
@@ -597,44 +596,68 @@
             { id: 10, orderId: "CA-2015-115812", orderDate: "2015-06-09", shipDate: "2015-06-14", shipMode: "Standard Class", customerId: "BH-11710", customerName: "Brosina Hoffman", segment: "Consumer", country: "United States", city: "Los Angeles", state: "California", postalCode: "90032", region: "West", productId: "OFF-AP-10002892", category: "Office Supplies", subCategory: "Appliances", productName: "Belkin F5C206VTEL 6 Outlet Surge", sales: 114.90, year: 2015, month: 6 }
         ];
 
-        // Adicionar mais dados para ter uma base mais completa
-        for (let i = 11; i <= 200; i++) {
-            const year = 2015 + Math.floor(Math.random() * 4);
-            const month = Math.floor(Math.random() * 12) + 1;
-            const segments = ["Consumer", "Corporate", "Home Office"];
-            const regions = ["Central", "East", "South", "West"];
-            const categories = ["Furniture", "Office Supplies", "Technology"];
-            const shipModes = ["First Class", "Second Class", "Standard Class", "Same Day"];
-            
-            salesData.push({
-                id: i,
-                orderId: `CA-${year}-${100000 + i}`,
-                orderDate: `${year}-${month.toString().padStart(2, '0')}-${Math.floor(Math.random() * 28) + 1}`,
-                shipDate: `${year}-${month.toString().padStart(2, '0')}-${Math.floor(Math.random() * 28) + 1}`,
-                shipMode: shipModes[Math.floor(Math.random() * shipModes.length)],
-                customerId: `CU-${10000 + i}`,
-                customerName: `Customer ${i}`,
-                segment: segments[Math.floor(Math.random() * segments.length)],
-                country: "United States",
-                city: `City ${i}`,
-                state: `State ${i}`,
-                postalCode: `${10000 + i}`,
-                region: regions[Math.floor(Math.random() * regions.length)],
-                productId: `PROD-${10000 + i}`,
-                category: categories[Math.floor(Math.random() * categories.length)],
-                subCategory: `Subcategory ${i}`,
-                productName: `Product ${i}`,
-                sales: Math.random() * 1000 + 10,
-                year: year,
-                month: month
-            });
+        async function loadExcel() {
+            async function fetchBuffer(path) {
+                const res = await fetch(path);
+                if (!res.ok) throw new Error(String(res.status));
+                return await res.arrayBuffer();
+            }
+            let buf;
+            try {
+                buf = await fetchBuffer('./baseLimpa.xlsx');
+            } catch (e) {
+                buf = await fetchBuffer('../baseLimpa.xlsx');
+            }
+            const wb = XLSX.read(buf, { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval: null });
+            const out = [];
+            for (const r of rows) {
+                const dt = r['Order Date'] || r['Data do Pedido'] || r['order_date'] || r['OrderDate'];
+                const d = typeof dt === 'string' ? new Date(dt) : (dt instanceof Date ? dt : null);
+                const anoRaw = r['Ano'] ?? r['Year'];
+                const ano = Number.isFinite(Number(anoRaw)) ? Number(anoRaw) : (d && d.getFullYear ? d.getFullYear() : NaN);
+                let mesRaw = r['Mês'] || r['Mes'] || r['Month'];
+                let mes = Number.isFinite(Number(mesRaw)) ? Number(mesRaw) : (d && d.getMonth ? (d.getMonth() + 1) : NaN);
+                const sales = Number(r['Sales'] ?? r['Vendas'] ?? r['Sales Amount'] ?? r['Valor'] ?? 0) || 0;
+                out.push({
+                    id: out.length + 1,
+                    orderId: r['Order ID'] || r['OrderID'] || '',
+                    orderDate: d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '',
+                    shipDate: r['Ship Date'] || '',
+                    shipMode: r['Ship Mode'] || r['Modo de Envio'] || '',
+                    customerId: r['Customer ID'] || '',
+                    customerName: r['Customer Name'] || r['Cliente'] || '',
+                    segment: r['Segment'] || r['Segmento'] || '',
+                    country: r['Country'] || '',
+                    city: r['City'] || '',
+                    state: r['State'] || '',
+                    postalCode: String(r['Postal Code'] || ''),
+                    region: r['Region'] || r['Região'] || '',
+                    productId: r['Product ID'] || '',
+                    category: r['Category'] || r['Categoria'] || '',
+                    subCategory: r['Sub-Category'] || r['Subcategoria'] || '',
+                    productName: r['Product Name'] || r['Produto'] || r['Nome do Produto'] || '',
+                    sales: sales,
+                    year: Number(ano),
+                    month: Number(mes)
+                });
+            }
+            return out.filter(x => Number.isFinite(x.year) && Number.isFinite(x.month));
+        }
+
+        async function loadData() {
+            try {
+                const d = await loadExcel();
+                if (Array.isArray(d) && d.length > 0) salesData = d;
+            } catch (e) {}
         }
 
         // Variáveis globais para os gráficos
         let salesTrendChart, segmentChart, categoryChart, topProductsChart, regionChart, shipModeChart;
 
-        // Inicializar o dashboard
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadData();
             initializeDashboard();
             setupEventListeners();
         });
@@ -857,12 +880,17 @@
             const topProducts = Object.entries(salesByProduct)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, topN);
+            const fullProductNames = topProducts.map(item => item[0]);
+            const displayLabels = fullProductNames.map((name, idx) => {
+                const m = /^Product\s+\d+$/i.test(name);
+                return m ? name : `Product ${idx + 1}`;
+            });
             
             const topProductsCtx = document.getElementById('top-products-chart').getContext('2d');
             topProductsChart = new Chart(topProductsCtx, {
                 type: 'bar',
                 data: {
-                    labels: topProducts.map(item => item[0]),
+                    labels: displayLabels,
                     datasets: [{
                         label: 'Vendas (R$)',
                         data: topProducts.map(item => item[1]),
@@ -876,6 +904,15 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: (items) => [fullProductNames[items[0].dataIndex]],
+                                label: (ctx) => {
+                                    const v = ctx.parsed.y;
+                                    return `Vendas (R$): ${v.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                                }
+                            }
                         }
                     },
                     scales: {
@@ -896,6 +933,8 @@
                     }
                 }
             });
+
+
             
             // Gráfico de Regiões
             const salesByRegion = {};

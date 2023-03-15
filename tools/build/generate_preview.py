@@ -57,6 +57,7 @@ font_btn = load_font(22)
 
 def find_logo_path():
     candidates = [
+        "dashboard/logo_miniatura.png",
         "dashboard/logo_fh.png",
         "dashboard/brand.png",
         "dashboard/logo.png",
