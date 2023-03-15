@@ -24,6 +24,7 @@
   <link rel="apple-touch-icon" href="./favicon.png?v=2024" />
   <!-- Libs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -113,6 +114,17 @@
   </main>
 
   <script>
+    // Registro e defaults do Chart.js + Datalabels
+    Chart.register(ChartDataLabels);
+    Chart.defaults.color = '#e6e6e6';
+    Chart.defaults.font.family = "Segoe UI, Arial, sans-serif";
+    const datalabelsDefaults = {
+      color: '#e6e6e6',
+      anchor: 'end',
+      align: 'end',
+      formatter: (value) => toMilBRL(value)
+    };
+
     const MONTHS_PT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]; 
 
     // Utilidades de agrupamento
@@ -182,6 +194,13 @@
       return (new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })).format(v);
     }
 
+    function toMil(v) {
+      return Math.round(v/1000);
+    }
+    function toMilBRL(v) {
+      return `R$ ${toMil(v).toLocaleString('pt-BR')} mil`;
+    }
+
     async function init() {
       const data = await loadExcel();
 
@@ -194,7 +213,16 @@
       new Chart(ctxAno, {
         type: 'bar',
         data: { labels: anos, datasets: [{ label: 'Vendas (R$)', data: valoresAno, backgroundColor: '#4f7cf3' }] },
-        options: { plugins: { legend: { labels: { color: '#e6e6e6' } } }, scales: { x: { ticks: { color: '#e6e6e6' } }, y: { ticks: { color: '#e6e6e6' } } } }
+        options: {
+          plugins: {
+            legend: { labels: { color: '#e6e6e6' } },
+            datalabels: datalabelsDefaults
+          },
+          scales: {
+            x: { ticks: { color: '#e6e6e6' } },
+            y: { ticks: { color: '#e6e6e6', callback: (v)=> toMilBRL(v) } }
+          }
+        }
       });
       document.getElementById('textoAno').textContent = `Maior faturamento em ${anoMax[0]} com ${formatBRL(anoMax[1])}. Tendência anual evidenciada no gráfico.`;
 
@@ -210,7 +238,22 @@
         fill: false
       }));
       const ctxMesAno = document.getElementById('chartMesAno');
-      new Chart(ctxMesAno, { type: 'line', data: { labels: MONTHS_PT, datasets: datasetsMesAno }, options: { plugins: { legend: { labels: { color: '#e6e6e6' } } }, scales: { x: { ticks: { color: '#e6e6e6' } }, y: { ticks: { color: '#e6e6e6' } } } } });
+      // linha com suavização para aproximar estilo Power BI
+      datasetsMesAno.forEach(ds => { ds.tension = 0.3; ds.pointRadius = 3; });
+      new Chart(ctxMesAno, {
+        type: 'line',
+        data: { labels: MONTHS_PT, datasets: datasetsMesAno },
+        options: {
+          plugins: {
+            legend: { labels: { color: '#e6e6e6' } },
+            datalabels: { display: false }
+          },
+          scales: {
+            x: { ticks: { color: '#e6e6e6' } },
+            y: { ticks: { color: '#e6e6e6', callback: (v)=> toMilBRL(v) } }
+          }
+        }
+      });
       // texto: mês/ano pico
       let pico = { mk: '', v: -Infinity };
       for (const [mk,v] of byMesAno.entries()) if (v>pico.v) pico = { mk, v };
@@ -227,7 +270,20 @@
         backgroundColor: palette[i]
       }));
       const ctxCat = document.getElementById('chartCategoriaAno');
-      new Chart(ctxCat, { type: 'bar', data: { labels: categorias, datasets: datasetsCategoria }, options: { plugins: { legend: { labels: { color: '#e6e6e6' } } }, scales: { x: { ticks: { color: '#e6e6e6' } }, y: { ticks: { color: '#e6e6e6' } } } } });
+      new Chart(ctxCat, {
+        type: 'bar',
+        data: { labels: categorias, datasets: datasetsCategoria },
+        options: {
+          plugins: {
+            legend: { labels: { color: '#e6e6e6' } },
+            datalabels: datalabelsDefaults
+          },
+          scales: {
+            x: { ticks: { color: '#e6e6e6' } },
+            y: { ticks: { color: '#e6e6e6', callback: (v)=> toMilBRL(v) } }
+          }
+        }
+      });
       // texto: categoria campeã acumulada
       const accCat = categorias.map(c => anosUnicos.reduce((s, ano)=> s + (byCatAno.get(`${c}__${ano}`) || 0), 0));
       const idxMaxCat = accCat.reduce((imax, v, i)=> v>accCat[imax]?i:imax, 0);
@@ -237,7 +293,25 @@
       const byProduto = sumBy(data, 'Product Name');
       const top10 = Array.from(byProduto.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
       const ctxTop = document.getElementById('chartTop10');
-      new Chart(ctxTop, { type: 'bar', data: { labels: top10.map(([k])=>k), datasets: [{ label: 'Vendas (R$)', data: top10.map(([,v])=>v), backgroundColor: makePalette(10) }] }, options: { indexAxis:'y', plugins:{ legend:{ labels:{ color:'#e6e6e6' } } }, scales:{ x:{ ticks:{ color:'#e6e6e6' } }, y:{ ticks:{ color:'#e6e6e6' } } } } });
+      const labelsTop = top10.map(([k])=> (k.length>24 ? (k.slice(0,21)+'…') : k));
+      new Chart(ctxTop, {
+        type: 'bar',
+        data: { labels: labelsTop, datasets: [{ label: 'Vendas (R$)', data: top10.map(([,v])=>v), backgroundColor: makePalette(10) }] },
+        options: {
+          indexAxis:'y',
+          plugins:{
+            legend:{ labels:{ color:'#e6e6e6' } },
+            datalabels: {
+              ...datalabelsDefaults,
+              anchor: 'end', align: 'end'
+            }
+          },
+          scales:{
+            x:{ ticks:{ color:'#e6e6e6', callback: (v)=> toMilBRL(v) } },
+            y:{ ticks:{ color:'#e6e6e6' } }
+          }
+        }
+      });
       document.getElementById('textoTop10').textContent = `Produto líder: ${top10[0][0]} com ${formatBRL(top10[0][1])}.`;
 
       // 5) Produtos mais vendidos por ano (Top 10 geral pivot)
@@ -249,7 +323,20 @@
         backgroundColor: makePalette(anosUnicos.length)[idx]
       }));
       const ctxProdAno = document.getElementById('chartProdutosAno');
-      new Chart(ctxProdAno, { type: 'bar', data: { labels: top10Names, datasets: datasetsProdAno }, options: { plugins: { legend: { labels: { color: '#e6e6e6' } } }, scales: { x: { ticks: { color: '#e6e6e6', autoSkip: false, maxRotation: 30, minRotation: 0 } }, y: { ticks: { color: '#e6e6e6' } } } } });
+      new Chart(ctxProdAno, {
+        type: 'bar',
+        data: { labels: top10Names, datasets: datasetsProdAno },
+        options: {
+          plugins: {
+            legend: { labels: { color: '#e6e6e6' } },
+            datalabels: { display: false }
+          },
+          scales: {
+            x: { ticks: { color: '#e6e6e6', autoSkip: false, maxRotation: 30, minRotation: 0 } },
+            y: { ticks: { color: '#e6e6e6', callback: (v)=> toMilBRL(v) } }
+          }
+        }
+      });
       // texto: destaque por ano
       let destaques = [];
       for (const ano of anosUnicos) {

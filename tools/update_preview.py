@@ -22,8 +22,9 @@ def create_dashboard_preview():
         logo = Image.open(logo_path)
         print(f"Logo carregado: {logo.size}")
         
-        # Dimensões da miniatura (proporção do dashboard real)
-        width, height = 1200, 675
+        # Dimensões da miniatura (proporção OpenGraph, igual ao ad hoc)
+        # Padronizado para 1200×630 para manter a mesma altura das duas miniaturas
+        width, height = 1200, 630
         
         # Cores do dashboard
         bg_color = '#1a1a1a'  # Fundo principal
