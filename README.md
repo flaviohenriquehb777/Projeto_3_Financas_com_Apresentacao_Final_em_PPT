@@ -6,10 +6,10 @@
 [p align="center"]
 <p align="center">
   <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html" title="Dashboard de Vendas">
-    <img src="dashboard/preview.png" alt="Abrir Dashboard de Vendas" width="49%" />
+    <img src="dashboard/preview.png" alt="Abrir Dashboard de Vendas" width="49%" style="border-radius: 12px;" />
   </a>
-  <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_analise_ad_hoc.html" title="Dashboard Análise ad hoc">
-    <img src="dashboard/preview_ad_hoc.png" alt="Abrir Dashboard Análise ad hoc" width="49%" />
+  <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_analise_ad_hoc.html" title="Dashboard Análise ad hoc">
+    <img src="dashboard/preview_ad_hoc.png" alt="Abrir Dashboard Análise ad hoc" width="49%" style="border-radius: 12px;" />
   </a>
   
 </p>
