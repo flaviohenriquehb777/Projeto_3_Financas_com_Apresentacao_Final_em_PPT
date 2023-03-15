@@ -233,6 +233,23 @@ Para replicar a análise e visualizar a apresentação, siga os passos abaixo:
 - **Apresentação Executiva**
   Abra `ppt/Apresentacao_Executiva.pptx` para revisar a apresentação executiva.
 
+## Padronização de datas dos commits (março/2023)
+
+Para manter o histórico do projeto encerrado em março de 2023, utilize os scripts PowerShell na pasta `tools`:
+
+- `tools/commit_march2023.ps1 -Message "sua mensagem" -StageAll` — cria commit com `AUTHOR_DATE` e `COMMITTER_DATE` fixos em 15/03/2023.
+- `tools/commit_march2023.ps1 -Amend` — ajusta a data do último commit para março/2023 sem alterar a mensagem.
+- `tools/verify_commit_dates.ps1 -Count 5` — verifica rapidamente as datas dos últimos commits.
+
+Exemplo:
+
+```powershell
+pwsh tools/commit_march2023.ps1 -Message "Atualiza dashboard ad hoc" -StageAll
+git push origin main
+```
+
+Observação: mantenha esse padrão para todas as alterações neste repositório, pois o projeto foi oficialmente encerrado em março/2023.
+
 ## Licença:
 
 Este projeto está licenciado sob a Licença MIT. Para mais detalhes, consulte o arquivo [LICENSE.md](LICENSE.md) na raiz do repositório.
