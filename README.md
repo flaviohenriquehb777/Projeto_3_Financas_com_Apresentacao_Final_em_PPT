@@ -3,9 +3,18 @@
 [![Abrir Dashboard](https://img.shields.io/badge/Abrir%20Dashboard-Interativo-1d4ed8?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html)
 [![Abrir Site](https://img.shields.io/badge/Abrir%20Site-Landing%20Page-0ea5e9?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/)
 
-[![Abrir Dashboard Interativo](dashboard/preview.png)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html)
+[p align="center"]
+<p align="center">
+  <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html" title="Dashboard de Vendas">
+    <img src="dashboard/preview.png" alt="Abrir Dashboard de Vendas" width="49%" />
+  </a>
+  <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_analise_ad_hoc.html" title="Dashboard Análise ad hoc">
+    <img src="dashboard/preview_ad_hoc.png" alt="Abrir Dashboard Análise ad hoc" width="49%" />
+  </a>
+  
+</p>
 
-Clique na miniatura acima para abrir o dashboard interativo diretamente no seu navegador.
+Clique em qualquer miniatura acima para abrir o dashboard diretamente no navegador.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
