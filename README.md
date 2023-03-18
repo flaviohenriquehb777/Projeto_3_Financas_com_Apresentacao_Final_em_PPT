@@ -3,7 +3,6 @@
 [![Abrir Dashboard](https://img.shields.io/badge/Abrir%20Dashboard-Interativo-1d4ed8?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html)
 [![Abrir Site](https://img.shields.io/badge/Abrir%20Site-Landing%20Page-0ea5e9?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/)
 
-[p align="center"]
 <p align="center">
   <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html?v=2025-11-26" title="Dashboard de Vendas">
     <img src="dashboard/preview.png" alt="Abrir Dashboard de Vendas" width="49%" style="border-radius: 12px;" />
