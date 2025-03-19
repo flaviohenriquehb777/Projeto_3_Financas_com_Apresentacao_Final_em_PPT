@@ -1,4 +1,4 @@
-# Projeto_3_Financas_com_Apresentacao_Final_em_PPT<br>
+## Análise Financeira com Apresentação Executiva (Sam's Club - Walmart) <br>
 
 ### Criando uma apresentação executiva a partir da análise financeira da empresa Sam's Club - Walmart. <br><br>
 
