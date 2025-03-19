@@ -1,6 +1,6 @@
 ## Análise Financeira com Apresentação Executiva (Sam's Club - Walmart) <br>
 
-### Criando uma apresentação executiva a partir da análise financeira da empresa Sam's Club - Walmart. <br><br>
+#### Criando uma apresentação executiva a partir da análise financeira da empresa Sam's Club - Walmart. <br><br>
 
 ## O que queremos responder? <br><br>
 - Como foi a venda nesse período?<br> 
