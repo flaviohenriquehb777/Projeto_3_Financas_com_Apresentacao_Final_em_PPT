@@ -1,5 +1,7 @@
 # Análise Financeira com Apresentação Executiva (Sam's Club - Walmart)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Projeto de consultoria financeira para o Sam's Club - Walmart, com o objetivo de gerar insights a partir de dados de vendas e apresentá-los de forma executiva.**
 
 ## Sumário
