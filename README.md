@@ -1,5 +1,8 @@
 # Análise Financeira com Apresentação Executiva (Sam's Club - Walmart)
 
+[![Abrir Dashboard](https://img.shields.io/badge/Abrir%20Dashboard-Interativo-1d4ed8?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_vendas.html)
+[![Abrir Site](https://img.shields.io/badge/Abrir%20Site-Landing%20Page-0ea5e9?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/)
+
 [![Miniatura do Dashboard](dashboard/preview.svg)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_vendas.html)
 
 Clique na miniatura acima para abrir o dashboard interativo diretamente no seu navegador.
