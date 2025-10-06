@@ -1,5 +1,9 @@
 # Análise Financeira com Apresentação Executiva (Sam's Club - Walmart)
 
+[![Miniatura do Dashboard](dashboard/preview.svg)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_vendas.html)
+
+Clique na miniatura acima para abrir o dashboard interativo diretamente no seu navegador.
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Projeto de consultoria financeira para o Sam's Club - Walmart, com o objetivo de gerar insights a partir de dados de vendas e apresentá-los de forma executiva.**
@@ -111,14 +115,15 @@ O projeto agora inclui um **dashboard web interativo** (dashboard_vendas.html) q
 
 ### Publicação via GitHub Pages
 
-O dashboard está disponível online via GitHub Pages:
+Como visualizar de forma interativa (sem clonar o repositório):
 
-- Site: https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/
-- O índice (`dashboard/index.html`) redireciona automaticamente para `dashboard_vendas.html`.
+- Página inicial (landing page): `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/`
+- Dashboard direto: `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_vendas.html`
 
-Automação de publicação:
-- O workflow `.github/workflows/deploy.yml` publica a pasta `dashboard` sempre que houver push no branch `main`.
-- A primeira publicação pode levar alguns minutos até o site estar disponível.
+Observações:
+- A landing page (`index.html` na raiz) tem um botão “Acessar Dashboard”.
+- O dashboard usa bibliotecas via CDN (`Chart.js`, `jsPDF`, `html2canvas`, `jspdf-autotable`) e dados embutidos, então roda 100% no navegador.
+- Caso o site demore a publicar, aguarde alguns minutos ou verifique o estado do GitHub Pages em “Settings > Pages”.
 
 ## Resultados Chave e Apresentação:
 
@@ -176,7 +181,7 @@ equirements.txt:**
       Abra o notebook 
 otebooks/Calculos_Financeiros_Empresa.ipynb para executar a análise de dados.
     
-    * **Dashboard Interativo**: Abra o arquivo dashboard_vendas.html diretamente no seu navegador:
+    * **Dashboard Interativo**: Abra o arquivo dashboard_vendas.html diretamente no seu navegador ou acesse pelo GitHub Pages (links acima):
         `ash
         # No Windows:
         start dashboard_vendas.html
@@ -186,6 +191,16 @@ otebooks/Calculos_Financeiros_Empresa.ipynb para executar a análise de dados.
         
         # No Linux:
         xdg-open dashboard_vendas.html
+        `
+
+    * **Preview local rápido (opcional)**: Sirva a raiz do projeto ou a pasta `dashboard/` com HTTP simples e acesse `http://localhost:8000/`:
+        `
+        # Servindo a raiz do projeto
+        python -m http.server 8000
+        
+        # Servindo apenas a pasta dashboard
+        cd dashboard
+        python -m http.server 8000
         `
     
     * **Apresentação Executiva**: Abra o arquivo ppt/Apresentacao_Executiva.pptx para revisar a apresentação executiva.
