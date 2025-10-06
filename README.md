@@ -42,16 +42,14 @@ Este repositório está organizado para facilitar a compreensão e replicação 
 
 -   dados/:
     -   criando_uma_apresentacao_executiva.csv: A base de dados bruta utilizada para a análise.
--   
-otebooks/:
+-   notebooks/:
     -   Calculos_Financeiros_Empresa.ipynb: O notebook Jupyter que contém toda a análise de dados, desde a importação e tratamento até a geração dos gráficos e cálculos para os insights.
 -   ppt/:
     -   Apresentacao_Executiva.pptx: A apresentação em PowerPoint com os resultados e insights consolidados para uma audiência executiva.
 -   dashboard_vendas.html: **NOVO** - Dashboard interativo para análise exploratória de dados.
 -   README.md: Este arquivo, fornecendo uma visão geral do projeto.
 -   LICENSE.md: Arquivo contendo os termos da licença do projeto (MIT).
--   
-equirements.txt: Lista das bibliotecas Python e suas versões necessárias para executar o notebook.
+-   requirements.txt: Lista das bibliotecas Python e suas versões necessárias para executar o notebook.
 
 ## Base de Dados:
 
@@ -145,68 +143,57 @@ Os resultados detalhados podem ser encontrados no notebook, mas os principais in
 -   **Chart.js** (para visualizações gráficas no dashboard)
 -   **jsPDF + html2canvas** (para exportação em PDF)
 
-## Instalação e Uso:
+## Instalação e Uso
 
 Para replicar a análise e visualizar a apresentação, siga os passos abaixo:
 
-1.  **Pré-requisitos:**
-    * Python 3.8+
-    * pip (gerenciador de pacotes do Python)
-    * Jupyter Lab ou Jupyter Notebook
-    * Um visualizador de arquivos .pptx (como Microsoft PowerPoint, Google Slides, LibreOffice Impress).
-    * **Navegador web moderno** (para o dashboard interativo)
+- **Pré-requisitos**
+  - Python 3.8+
+  - pip (gerenciador de pacotes do Python)
+  - Jupyter Lab ou Jupyter Notebook
+  - Visualizador de arquivos `.pptx` (PowerPoint, Google Slides, LibreOffice)
+  - Navegador moderno (para o dashboard interativo)
 
-2.  **Clone o repositório:**
-    `ash
-    git clone https://github.com/seu-usuario/Projeto_3_Financas_com_Apresentacao_Final_em_PPT.git
-    cd Projeto_3_Financas_com_Apresentacao_Final_em_PPT
-    `
-    *(Lembre-se de substituir seu-usuario pelo seu nome de usuário do GitHub.)*
+- **Clone o repositório**
+  ```bash
+  git clone https://github.com/flaviohenriquehb777/Projeto_3_Financas_com_Apresentacao_Final_em_PPT.git
+  cd Projeto_3_Financas_com_Apresentacao_Final_em_PPT
+  ```
 
-3.  **Crie o arquivo 
-equirements.txt:**
-    * Dentro do terminal do Jupyter Lab (ou em um terminal Git Bash na raiz do projeto), execute:
-        `ash
-        pip freeze > requirements.txt
-        `
-    *(**Importante:** Faça isso *depois* de ter todas as bibliotecas necessárias instaladas no seu ambiente Python.)*
+- **Instale as dependências**
+  ```bash
+  pip install -r requirements.txt
+  ```
 
-4.  **Instale as dependências:**
-    `ash
-    pip install -r requirements.txt
-    `
+- **Análise de Dados (Notebook)**
+  ```bash
+  jupyter lab
+  ```
+  Abra `notebooks/Calculos_Financeiros_Empresa.ipynb` e execute a análise.
 
-5.  **Acesse o Projeto:**
-    * **Análise de Dados**: Inicie o Jupyter Lab na raiz do projeto:
-        `ash
-        jupyter lab
-        `
-      Abra o notebook 
-otebooks/Calculos_Financeiros_Empresa.ipynb para executar a análise de dados.
-    
-    * **Dashboard Interativo**: Abra o arquivo dashboard_vendas.html diretamente no seu navegador ou acesse pelo GitHub Pages (links acima):
-        `ash
-        # No Windows:
-        start dashboard_vendas.html
-        
-        # No macOS:
-        open dashboard_vendas.html
-        
-        # No Linux:
-        xdg-open dashboard_vendas.html
-        `
+- **Dashboard Interativo (local)**
+  ```bash
+  # Windows
+  start dashboard\dashboard_vendas.html
 
-    * **Preview local rápido (opcional)**: Sirva a raiz do projeto ou a pasta `dashboard/` com HTTP simples e acesse `http://localhost:8000/`:
-        `
-        # Servindo a raiz do projeto
-        python -m http.server 8000
-        
-        # Servindo apenas a pasta dashboard
-        cd dashboard
-        python -m http.server 8000
-        `
-    
-    * **Apresentação Executiva**: Abra o arquivo ppt/Apresentacao_Executiva.pptx para revisar a apresentação executiva.
+  # macOS
+  open dashboard/dashboard_vendas.html
+
+  # Linux
+  xdg-open dashboard/dashboard_vendas.html
+  ```
+
+- **Preview local rápido (opcional)**
+  ```bash
+  # Servir a raiz do projeto
+  python -m http.server 8000
+  # ou apenas a pasta dashboard
+  cd dashboard
+  python -m http.server 8000
+  ```
+
+- **Apresentação Executiva**
+  Abra `ppt/Apresentacao_Executiva.pptx` para revisar a apresentação executiva.
 
 ## Licença:
 
