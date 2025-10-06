@@ -1,4 +1,4 @@
-﻿# Análise Financeira com Apresentação Executiva (Sam's Club - Walmart)
+# Análise Financeira com Apresentação Executiva (Sam's Club - Walmart)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -43,7 +43,8 @@ otebooks/:
 -   dashboard_vendas.html: **NOVO** - Dashboard interativo para análise exploratória de dados.
 -   README.md: Este arquivo, fornecendo uma visão geral do projeto.
 -   LICENSE.md: Arquivo contendo os termos da licença do projeto (MIT).
--   equirements.txt: Lista das bibliotecas Python e suas versões necessárias para executar o notebook.
+-   
+equirements.txt: Lista das bibliotecas Python e suas versões necessárias para executar o notebook.
 
 ## Base de Dados:
 
@@ -108,6 +109,17 @@ O projeto agora inclui um **dashboard web interativo** (dashboard_vendas.html) q
 3. Clique em "Aplicar Filtros" para atualizar as visualizações
 4. Use os botões de exportação para gerar relatórios
 
+### Publicação via GitHub Pages
+
+O dashboard está disponível online via GitHub Pages:
+
+- Site: https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/
+- O índice (`dashboard/index.html`) redireciona automaticamente para `dashboard_vendas.html`.
+
+Automação de publicação:
+- O workflow `.github/workflows/deploy.yml` publica a pasta `dashboard` sempre que houver push no branch `main`.
+- A primeira publicação pode levar alguns minutos até o site estar disponível.
+
 ## Resultados Chave e Apresentação:
 
 Os resultados detalhados podem ser encontrados no notebook, mas os principais insights foram sintetizados na Apresentacao_Executiva.pptx, disponível na pasta ppt/. Esta apresentação visa comunicar de forma clara e concisa o desempenho de vendas, as categorias e produtos de maior destaque, e outras observações relevantes para a tomada de decisões estratégicas.
@@ -143,7 +155,8 @@ Para replicar a análise e visualizar a apresentação, siga os passos abaixo:
     `
     *(Lembre-se de substituir seu-usuario pelo seu nome de usuário do GitHub.)*
 
-3.  **Crie o arquivo equirements.txt:**
+3.  **Crie o arquivo 
+equirements.txt:**
     * Dentro do terminal do Jupyter Lab (ou em um terminal Git Bash na raiz do projeto), execute:
         `ash
         pip freeze > requirements.txt
