@@ -3,7 +3,9 @@
 [![Abrir Dashboard](https://img.shields.io/badge/Abrir%20Dashboard-Interativo-1d4ed8?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_vendas.html)
 [![Abrir Site](https://img.shields.io/badge/Abrir%20Site-Landing%20Page-0ea5e9?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/)
 
-[![Miniatura do Dashboard](https://raw.githubusercontent.com/flaviohenriquehb777/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/main/dashboard/preview.svg)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_vendas.html)
+<a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_vendas.html" title="Abrir Dashboard Interativo">
+  <img src="https://github.com/flaviohenriquehb777/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/blob/main/dashboard/preview.svg?raw=1" alt="Miniatura do Dashboard" style="max-width: 860px; width: 100%; border: 1px solid #ddd; border-radius: 6px;" />
+</a>
 
 Clique na miniatura acima para abrir o dashboard interativo diretamente no seu navegador.
 
