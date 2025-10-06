@@ -1,4 +1,4 @@
-# Análise Financeira com Apresentação Executiva (Sam's Club - Walmart)
+﻿# Análise Financeira com Apresentação Executiva (Sam's Club - Walmart)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -10,6 +10,7 @@
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Base de Dados](#base-de-dados)
 - [Metodologia de Análise](#metodologia-de-análise)
+- [Dashboard Interativo](#dashboard-interativo)
 - [Resultados Chave e Apresentação](#resultados-chave-e-apresentação)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Instalação e Uso](#instalação-e-uso)
@@ -18,7 +19,7 @@
 
 ## Visão Geral do Projeto:
 
-Este projeto consiste em uma consultoria financeira abrangente para o Sam's Club - Walmart, com foco na análise de dados de vendas para responder a questões de negócio cruciais. A análise detalhada é realizada em um notebook Jupyter, e os principais insights são consolidados em uma apresentação executiva formatada para decisão.
+Este projeto consiste em uma consultoria financeira abrangente para o Sam's Club - Walmart, com foco na análise de dados de vendas para responder a questões de negócio cruciais. A análise detalhada é realizada em um notebook Jupyter, os principais insights são consolidados em uma apresentação executiva formatada para decisão, e agora inclui um **dashboard interativo** para exploração dinâmica dos dados.
 
 ## Objetivos da Análise:
 
@@ -32,23 +33,25 @@ A análise financeira foi guiada pelas seguintes perguntas chave, visando fornec
 
 Este repositório está organizado para facilitar a compreensão e replicação do projeto:
 
--   `dados/`:
-    -   `criando_uma_apresentacao_executiva.csv`: A base de dados bruta utilizada para a análise.
--   `notebooks/`:
-    -   `Calculos_Financeiros_Empresa.ipynb`: O notebook Jupyter que contém toda a análise de dados, desde a importação e tratamento até a geração dos gráficos e cálculos para os insights.
--   `ppt/`:
-    -   `Apresentacao_Executiva.pptx`: A apresentação em PowerPoint com os resultados e insights consolidados para uma audiência executiva.
--   `README.md`: Este arquivo, fornecendo uma visão geral do projeto.
--   `LICENSE.md`: Arquivo contendo os termos da licença do projeto (MIT).
--   `requirements.txt`: Lista das bibliotecas Python e suas versões necessárias para executar o notebook.
+-   dados/:
+    -   criando_uma_apresentacao_executiva.csv: A base de dados bruta utilizada para a análise.
+-   
+otebooks/:
+    -   Calculos_Financeiros_Empresa.ipynb: O notebook Jupyter que contém toda a análise de dados, desde a importação e tratamento até a geração dos gráficos e cálculos para os insights.
+-   ppt/:
+    -   Apresentacao_Executiva.pptx: A apresentação em PowerPoint com os resultados e insights consolidados para uma audiência executiva.
+-   dashboard_vendas.html: **NOVO** - Dashboard interativo para análise exploratória de dados.
+-   README.md: Este arquivo, fornecendo uma visão geral do projeto.
+-   LICENSE.md: Arquivo contendo os termos da licença do projeto (MIT).
+-   equirements.txt: Lista das bibliotecas Python e suas versões necessárias para executar o notebook.
 
 ## Base de Dados:
 
-O projeto utiliza o arquivo `criando_uma_apresentacao_executiva.csv`, localizado na pasta `dados/`. Este dataset contém informações detalhadas sobre as vendas, incluindo datas, valores, categorias e nomes de produtos, permitindo uma análise aprofundada do desempenho financeiro.
+O projeto utiliza o arquivo criando_uma_apresentacao_executiva.csv, localizado na pasta dados/. Este dataset contém informações detalhadas sobre as vendas, incluindo datas, valores, categorias e nomes de produtos, permitindo uma análise aprofundada do desempenho financeiro.
 
 ## Metodologia de Análise:
 
-A análise foi conduzida de forma meticulosa, seguindo os seguintes passos no notebook `Calculos_Financeiros_Empresa.ipynb`:
+A análise foi conduzida de forma meticulosa, seguindo os seguintes passos no notebook Calculos_Financeiros_Empresa.ipynb:
 
 1.  **Configuração do Ambiente:** Importação das bibliotecas necessárias e configuração inicial.
 2.  **Importação e Visualização da Base:** Carregamento do dataset e uma primeira inspeção dos dados.
@@ -60,9 +63,54 @@ A análise foi conduzida de forma meticulosa, seguindo os seguintes passos no no
 5.  **Visualização de Dados:** Geração de gráficos (com bibliotecas como Matplotlib e Seaborn) para ilustrar tendências de vendas, desempenho de categorias e identificar os produtos mais vendidos.
 6.  **Extração de Insights:** Identificação das respostas para as perguntas chave do projeto, baseadas nas análises e visualizações.
 
+## Dashboard Interativo:
+
+###  **Nova Funcionalidade: Dashboard de Vendas Interativo**
+
+O projeto agora inclui um **dashboard web interativo** (dashboard_vendas.html) que permite uma exploração dinâmica e em tempo real dos dados de vendas.
+
+#### Características Principais:
+
+- **Interface Moderna e Escura**: Design elegante com tema escuro para melhor visualização
+- **Métricas em Tempo Real**: 
+  - Total de vendas
+  - Número de pedidos
+  - Ticket médio
+  - Clientes únicos
+  - Média de itens por pedido
+  - Taxa de crescimento
+
+#### Filtros Avançados:
+- **Filtros Dinâmicos**: Ano, região, segmento, categoria, modo de envio
+- **Seleção de Top N**: Configuração para visualizar top 5, 10, 15 ou 20 produtos
+- **Intervalo de Datas**: Filtro por período específico
+
+#### Visualizações Incluídas:
+1. **Tendência Temporal**: Gráfico de linhas mostrando evolução das vendas ao longo do tempo
+2. **Segmentos de Clientes**: Gráfico de doughnut com distribuição por segmento
+3. **Categorias de Produtos**: Gráfico de pizza com participação por categoria
+4. **Top Produtos**: Gráfico de barras horizontais com produtos mais vendidos
+5. **Vendas por Região**: Gráfico de barras comparativo entre regiões
+6. **Modos de Envio**: Gráfico de pizza com distribuição dos modos de envio
+7. **Tabela Detalhada**: Visualização tabular com os dados filtrados
+
+#### Funcionalidades de Exportação:
+- **Exportação para CSV**: Download dos dados filtrados em formato CSV
+- **Exportação para PDF**: Relatório completo em PDF incluindo:
+  - Métricas principais
+  - Insights automatizados
+  - Tabela de dados
+  - Imagens de todos os gráficos
+
+#### Como Usar o Dashboard:
+1. Abra o arquivo dashboard_vendas.html em qualquer navegador moderno
+2. Utilize os filtros no topo para refinar os dados
+3. Clique em "Aplicar Filtros" para atualizar as visualizações
+4. Use os botões de exportação para gerar relatórios
+
 ## Resultados Chave e Apresentação:
 
-Os resultados detalhados podem ser encontrados no notebook, mas os principais insights foram sintetizados na `Apresentacao_Executiva.pptx`, disponível na pasta `ppt/`. Esta apresentação visa comunicar de forma clara e concisa o desempenho de vendas, as categorias e produtos de maior destaque, e outras observações relevantes para a tomada de decisões estratégicas.
+Os resultados detalhados podem ser encontrados no notebook, mas os principais insights foram sintetizados na Apresentacao_Executiva.pptx, disponível na pasta ppt/. Esta apresentação visa comunicar de forma clara e concisa o desempenho de vendas, as categorias e produtos de maior destaque, e outras observações relevantes para a tomada de decisões estratégicas.
 
 ## Tecnologias Utilizadas:
 
@@ -73,6 +121,9 @@ Os resultados detalhados podem ser encontrados no notebook, mas os principais in
 -   Seaborn (para visualizações estatísticas)
 -   Jupyter Notebook / Jupyter Lab
 -   Microsoft PowerPoint (para a apresentação executiva)
+-   **HTML5, CSS3, JavaScript** (para o dashboard interativo)
+-   **Chart.js** (para visualizações gráficas no dashboard)
+-   **jsPDF + html2canvas** (para exportação em PDF)
 
 ## Instalação e Uso:
 
@@ -80,36 +131,51 @@ Para replicar a análise e visualizar a apresentação, siga os passos abaixo:
 
 1.  **Pré-requisitos:**
     * Python 3.8+
-    * `pip` (gerenciador de pacotes do Python)
+    * pip (gerenciador de pacotes do Python)
     * Jupyter Lab ou Jupyter Notebook
-    * Um visualizador de arquivos `.pptx` (como Microsoft PowerPoint, Google Slides, LibreOffice Impress).
+    * Um visualizador de arquivos .pptx (como Microsoft PowerPoint, Google Slides, LibreOffice Impress).
+    * **Navegador web moderno** (para o dashboard interativo)
 
 2.  **Clone o repositório:**
-    ```bash
-    git clone [https://github.com/seu-usuario/Projeto_3_Financas_com_Apresentacao_Final_em_PPT.git](https://github.com/seu-usuario/Projeto_3_Financas_com_Apresentacao_Final_em_PPT.git)
+    `ash
+    git clone https://github.com/seu-usuario/Projeto_3_Financas_com_Apresentacao_Final_em_PPT.git
     cd Projeto_3_Financas_com_Apresentacao_Final_em_PPT
-    ```
-    *(Lembre-se de substituir `seu-usuario` pelo seu nome de usuário do GitHub.)*
+    `
+    *(Lembre-se de substituir seu-usuario pelo seu nome de usuário do GitHub.)*
 
-3.  **Crie o arquivo `requirements.txt`:**
+3.  **Crie o arquivo equirements.txt:**
     * Dentro do terminal do Jupyter Lab (ou em um terminal Git Bash na raiz do projeto), execute:
-        ```bash
+        `ash
         pip freeze > requirements.txt
-        ```
+        `
     *(**Importante:** Faça isso *depois* de ter todas as bibliotecas necessárias instaladas no seu ambiente Python.)*
 
 4.  **Instale as dependências:**
-    ```bash
+    `ash
     pip install -r requirements.txt
-    ```
+    `
 
 5.  **Acesse o Projeto:**
-    * Inicie o Jupyter Lab na raiz do projeto:
-        ```bash
+    * **Análise de Dados**: Inicie o Jupyter Lab na raiz do projeto:
+        `ash
         jupyter lab
-        ```
-    * Abra o notebook `notebooks/Calculos_Financeiros_Empresa.ipynb` para executar a análise de dados.
-    * Abra o arquivo `ppt/Apresentacao_Executiva.pptx` para revisar a apresentação executiva.
+        `
+      Abra o notebook 
+otebooks/Calculos_Financeiros_Empresa.ipynb para executar a análise de dados.
+    
+    * **Dashboard Interativo**: Abra o arquivo dashboard_vendas.html diretamente no seu navegador:
+        `ash
+        # No Windows:
+        start dashboard_vendas.html
+        
+        # No macOS:
+        open dashboard_vendas.html
+        
+        # No Linux:
+        xdg-open dashboard_vendas.html
+        `
+    
+    * **Apresentação Executiva**: Abra o arquivo ppt/Apresentacao_Executiva.pptx para revisar a apresentação executiva.
 
 ## Licença:
 
