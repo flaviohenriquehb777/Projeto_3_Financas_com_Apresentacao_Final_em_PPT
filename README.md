@@ -4,7 +4,7 @@
 [![Abrir Site](https://img.shields.io/badge/Abrir%20Site-Landing%20Page-0ea5e9?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/)
 
 <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html" title="Abrir Dashboard Interativo">
-  <img src="https://github.com/flaviohenriquehb777/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/blob/main/dashboard/logo%20vazada%20FH%20Data.png?raw=1" alt="Logotipo FH Data" style="max-width: 860px; width: 100%; aspect-ratio: 1200 / 630; object-fit: contain; background: #0f0f12; border: 1px solid #ddd; border-radius: 6px; padding: 12px;" />
+  <img src="dashboard/logo%20vazada%20FH%20Data.png" alt="Logotipo FH Data" style="max-width: 860px; width: 100%; background: #0f0f12; border: 1px solid #ddd; border-radius: 6px; padding: 12px;" />
 </a>
 
 Clique na miniatura acima para abrir o dashboard interativo diretamente no seu navegador.
