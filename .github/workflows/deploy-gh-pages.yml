@@ -24,15 +24,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: .
+          publish_dir: dashboard
           force_orphan: true
           enable_jekyll: false
           exclude_assets: |
-            .github/**
-            src/**
-            notebooks/**
-            dados/**
-            ppt/**
-            requirements.txt
-            LICENSE.md
-            README.md
+            # Nenhum, publicando apenas conteúdo de dashboard
