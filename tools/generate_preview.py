@@ -164,25 +164,29 @@ output_path = "dashboard/preview.png"
 img.save(output_path, format="PNG", optimize=True)
 print(f"Gerado: {output_path}")
 
-# Favicon (PNG) 512x512 com identidade "DV"
+# Favicon (PNG) 512x512 com logo estilizada do Sam's Club
 FAV_SIZE = 512
-fav = Image.new("RGB", (FAV_SIZE, FAV_SIZE), BG)
+fav = Image.new("RGBA", (FAV_SIZE, FAV_SIZE), (0, 0, 0, 0))
 fdraw = ImageDraw.Draw(fav)
 
-# Base com borda sutil
-margin = 28
-fdraw.rounded_rectangle((margin, margin, FAV_SIZE - margin, FAV_SIZE - margin), radius=64, fill=SURFACE, outline=BORDER, width=3)
-inner_margin = margin + 28
-fdraw.rounded_rectangle((inner_margin, inner_margin, FAV_SIZE - inner_margin, FAV_SIZE - inner_margin), radius=48, fill=SURFACE_2)
+# Cores aproximadas do logo
+SAM_BLUE = (0, 79, 159)
+LIGHT_BLUE = (40, 169, 224)
+SAM_GREEN = (104, 168, 54)
 
-# Texto central "DV"
-font_logo = load_font(220)
-logo_text = "DV"
-bbox_logo = fdraw.textbbox((0, 0), logo_text, font=font_logo)
-ltw = bbox_logo[2] - bbox_logo[0]
-lth = bbox_logo[3] - bbox_logo[1]
-fdraw.text(((FAV_SIZE - ltw) / 2, (FAV_SIZE - lth) / 2 - 10), logo_text, fill=PRIMARY, font=font_logo)
+def draw_diamond(draw: ImageDraw.ImageDraw, cx: int, cy: int, half: int, color):
+    pts = [(cx, cy - half), (cx + half, cy), (cx, cy + half), (cx - half, cy)]
+    draw.polygon(pts, fill=color)
 
+# Diamante principal
+cx = cy = FAV_SIZE // 2
+draw_diamond(fdraw, cx, cy, 220, SAM_BLUE)
+
+# Diamantes internos sobrepostos (light blue e green)
+draw_diamond(fdraw, cx - 28, cy - 58, 88, LIGHT_BLUE)
+draw_diamond(fdraw, cx + 36, cy - 22, 88, SAM_GREEN)
+
+# Salvar
 favicon_path = "dashboard/favicon.png"
 fav.save(favicon_path, format="PNG", optimize=True)
 print(f"Gerado: {favicon_path}")
