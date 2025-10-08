@@ -163,3 +163,26 @@ draw.text((pad + 28, HEIGHT - pad - 28), footer, fill=MUTED, font=font_small)
 output_path = "dashboard/preview.png"
 img.save(output_path, format="PNG", optimize=True)
 print(f"Gerado: {output_path}")
+
+# Favicon (PNG) 512x512 com identidade "DV"
+FAV_SIZE = 512
+fav = Image.new("RGB", (FAV_SIZE, FAV_SIZE), BG)
+fdraw = ImageDraw.Draw(fav)
+
+# Base com borda sutil
+margin = 28
+fdraw.rounded_rectangle((margin, margin, FAV_SIZE - margin, FAV_SIZE - margin), radius=64, fill=SURFACE, outline=BORDER, width=3)
+inner_margin = margin + 28
+fdraw.rounded_rectangle((inner_margin, inner_margin, FAV_SIZE - inner_margin, FAV_SIZE - inner_margin), radius=48, fill=SURFACE_2)
+
+# Texto central "DV"
+font_logo = load_font(220)
+logo_text = "DV"
+bbox_logo = fdraw.textbbox((0, 0), logo_text, font=font_logo)
+ltw = bbox_logo[2] - bbox_logo[0]
+lth = bbox_logo[3] - bbox_logo[1]
+fdraw.text(((FAV_SIZE - ltw) / 2, (FAV_SIZE - lth) / 2 - 10), logo_text, fill=PRIMARY, font=font_logo)
+
+favicon_path = "dashboard/favicon.png"
+fav.save(favicon_path, format="PNG", optimize=True)
+print(f"Gerado: {favicon_path}")
