@@ -4,7 +4,7 @@
 [![Abrir Site](https://img.shields.io/badge/Abrir%20Site-Landing%20Page-0ea5e9?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/)
 
 <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html" title="Abrir Dashboard Interativo">
-  <img src="dashboard/logo%20vazada%20FH%20Data.png" alt="Logotipo FH Data" style="max-width: 860px; width: 100%; background: #0f0f12; border: 1px solid #ddd; border-radius: 6px; padding: 12px;" />
+  <img src="dashboard/logo_fh.png" alt="Logotipo FH Data" style="max-width: 860px; width: 100%; background: #0f0f12; border: 1px solid #ddd; border-radius: 6px; padding: 12px;" />
 </a>
 
 Clique na miniatura acima para abrir o dashboard interativo diretamente no seu navegador.
@@ -144,7 +144,7 @@ Se o deploy ficar “pendente” ou “rejected”, aprove o ambiente `github-pa
 
 ### Miniatura do Projeto (Logotipo)
 
-A miniatura apresentada no topo do README agora exibe o **novo logotipo** (`dashboard/logo vazada FH Data.png`), mantendo a **proporção 1200×630** para compatibilidade com OpenGraph/Twitter.
+A miniatura apresentada no topo do README agora exibe o **novo logotipo** (`dashboard/logo_fh.png`), mantendo a **proporção 1200×630** para compatibilidade com OpenGraph/Twitter.
 
 Como gerar/atualizar automaticamente:
 1. Instale Pillow (se necessário): `pip install Pillow`
@@ -156,13 +156,13 @@ Como gerar/atualizar automaticamente:
 
 Personalização rápida:
 - Ajuste cores, textos e fontes em `tools/generate_preview.py`.
-- Substitua a imagem em `dashboard/logo vazada FH Data.png` para atualizar o branding.
+- Substitua a imagem em `dashboard/logo_fh.png` para atualizar o branding.
 
 ### Metadados e Favicon (Compartilhamento)
 
 As páginas `index.html` (landing) e `dashboard_vendas.html` foram atualizadas com metatags **OpenGraph** e **Twitter Cards** apontando para a **logo** em URL absoluto, garantindo a miniatura correta.
 
-- OpenGraph/Twitter: imagem `dashboard/logo vazada FH Data.png` (URL absoluto)
+- OpenGraph/Twitter: imagem `dashboard/logo_fh.png` (URL absoluto)
 - Favicon: `dashboard/favicon.ico` + variações PNG (16–512) e `dashboard/favicon.png`
 - Geração: `tools/generate_preview.py` cria todas as imagens automaticamente
 
