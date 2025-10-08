@@ -155,6 +155,14 @@ Personalização rápida:
 - Edite `tools/generate_preview.py` para alterar paleta de cores, textos dos cards e fontes.
 - Substitua o bloco “DV” pelo seu logotipo (PNG/SVG) se desejar.
 
+### Metadados e Favicon (Compartilhamento)
+
+Para melhorar o compartilhamento em redes sociais e mensageria, as páginas `index.html` (landing) e `dashboard_vendas.html` incluem metatags **OpenGraph** e **Twitter Cards**, usando `preview.png` como imagem destacada. Também foi adicionado um `favicon.png` (gerado automaticamente) para reforçar a identidade visual.
+
+- OpenGraph/Twitter: título, descrição e imagem (`preview.png`)
+- Favicon: arquivo `dashboard/favicon.png` referenciado nos HTMLs
+- Geração: o mesmo script `tools/generate_preview.py` cria `dashboard/preview.png` e `dashboard/favicon.png`
+
 ## Resultados Chave e Apresentação:
 
 Os resultados detalhados podem ser encontrados no notebook, mas os principais insights foram sintetizados na Apresentacao_Executiva.pptx, disponível na pasta ppt/. Esta apresentação visa comunicar de forma clara e concisa o desempenho de vendas, as categorias e produtos de maior destaque, e outras observações relevantes para a tomada de decisões estratégicas.
