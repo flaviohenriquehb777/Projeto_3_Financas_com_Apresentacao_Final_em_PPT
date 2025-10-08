@@ -76,7 +76,16 @@ def paste_logo_in_box(img, box_x, box_y, box_size):
         draw.text((box_x + (box_size - tw) / 2, box_y + (box_size - th) / 2), dv_text, fill=PRIMARY, font=font_title)
         return
 
-    logo = Image.open(path).convert("RGBA")
+    try:
+        logo = Image.open(path).convert("RGBA")
+    except Exception:
+        # fallback: monograma DV se a imagem estiver corrompida ou inválida
+        dv_text = "DV"
+        bbox = draw.textbbox((0, 0), dv_text, font=font_title)
+        tw = bbox[2] - bbox[0]
+        th = bbox[3] - bbox[1]
+        draw.text((box_x + (box_size - tw) / 2, box_y + (box_size - th) / 2), dv_text, fill=PRIMARY, font=font_title)
+        return
     margin = 12
     target = box_size - margin * 2
     w, h = logo.size
@@ -201,7 +210,10 @@ def generate_favicon_from_logo():
     sizes = [16, 32, 48, 64, 128, 256, 512]
     logo_path = find_logo_path()
     if logo_path:
-        base = Image.open(logo_path).convert("RGBA")
+        try:
+            base = Image.open(logo_path).convert("RGBA")
+        except Exception:
+            logo_path = None
         # PNG 512x512
         canvas = Image.new("RGBA", (FAV_SIZE, FAV_SIZE), (0, 0, 0, 0))
         margin = 16
