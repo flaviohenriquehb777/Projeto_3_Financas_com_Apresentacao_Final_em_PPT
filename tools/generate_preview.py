@@ -170,6 +170,7 @@ def generate_favicon_from_logo():
     FAV_SIZE = 512
     favicon_path = "dashboard/favicon.png"
     candidates = [
+        "dashboard/logo vazada FH Data.png",  # novo nome fornecido
         "dashboard/logo_fh.png",  # preferido
         "dashboard/brand.png",
         "dashboard/logo.png",
