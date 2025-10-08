@@ -121,12 +121,39 @@ O projeto agora inclui um **dashboard web interativo** (dashboard_vendas.html) q
 Como visualizar de forma interativa (sem clonar o repositório):
 
 - Página inicial (landing page): `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/`
-- Dashboard direto: `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_vendas.html`
+- Dashboard direto: `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html`
 
 Observações:
-- A landing page (`index.html` na raiz) tem um botão “Acessar Dashboard”.
+- A landing page (`dashboard/index.html`, publicada na raiz) tem um botão “Acessar Dashboard”.
 - O dashboard usa bibliotecas via CDN (`Chart.js`, `jsPDF`, `html2canvas`, `jspdf-autotable`) e dados embutidos, então roda 100% no navegador.
 - Caso o site demore a publicar, aguarde alguns minutos ou verifique o estado do GitHub Pages em “Settings > Pages”.
+
+### Publicação via GitHub Pages
+
+Este site publica o conteúdo da pasta `dashboard` diretamente no branch `gh-pages`.
+
+- Configuração em Pages: “Deploy from a branch” → `gh-pages` em `/(root)`
+- Workflow: `.github/workflows/deploy-gh-pages.yml` com `publish_dir: dashboard`
+- Após cada push em `main`, o conteúdo de `dashboard/` é enviado para `gh-pages`
+
+URLs de acesso:
+- Site (index do dashboard): `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/`
+- Dashboard direto: `https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html`
+
+Se o deploy ficar “pendente” ou “rejected”, aprove o ambiente `github-pages` em “Pages → Deployments” e confirme que o Pages está apontando para `gh-pages/(root)`.
+
+### Miniatura do Dashboard (PNG)
+
+A miniatura apresentada no topo do README (`dashboard/preview.png`) representa visualmente o dashboard (cards de métricas, barras, linha e pizza) e é gerada por script.
+
+Como gerar/atualizar:
+1. Instale Pillow (se necessário): `pip install Pillow`
+2. Execute: `python tools/generate_preview.py`
+3. O arquivo será salvo em `dashboard/preview.png`
+
+Personalização rápida:
+- Edite `tools/generate_preview.py` para alterar paleta de cores, textos dos cards e fontes.
+- Substitua o bloco “DV” pelo seu logotipo (PNG/SVG) se desejar.
 
 ## Resultados Chave e Apresentação:
 
