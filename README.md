@@ -4,7 +4,7 @@
 [![Abrir Site](https://img.shields.io/badge/Abrir%20Site-Landing%20Page-0ea5e9?style=for-the-badge)](https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/)
 
 <a href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html" title="Abrir Dashboard Interativo">
-  <img src="https://github.com/flaviohenriquehb777/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/blob/main/dashboard/preview.png?raw=1" alt="Miniatura do Dashboard" style="max-width: 860px; width: 100%; border: 1px solid #ddd; border-radius: 6px;" />
+  <img src="https://github.com/flaviohenriquehb777/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/blob/main/dashboard/logo%20vazada%20FH%20Data.png?raw=1" alt="Logotipo FH Data" style="max-width: 860px; width: 100%; aspect-ratio: 1200 / 630; object-fit: contain; background: #0f0f12; border: 1px solid #ddd; border-radius: 6px; padding: 12px;" />
 </a>
 
 Clique na miniatura acima para abrir o dashboard interativo diretamente no seu navegador.
@@ -142,26 +142,29 @@ URLs de acesso:
 
 Se o deploy ficar “pendente” ou “rejected”, aprove o ambiente `github-pages` em “Pages → Deployments” e confirme que o Pages está apontando para `gh-pages/(root)`.
 
-### Miniatura do Dashboard (PNG)
+### Miniatura do Projeto (Logotipo)
 
-A miniatura apresentada no topo do README (`dashboard/preview.png`) representa visualmente o dashboard (cards de métricas, barras, linha e pizza) e é gerada por script.
+A miniatura apresentada no topo do README agora exibe o **novo logotipo** (`dashboard/logo vazada FH Data.png`), mantendo a **proporção 1200×630** para compatibilidade com OpenGraph/Twitter.
 
-Como gerar/atualizar:
+Como gerar/atualizar automaticamente:
 1. Instale Pillow (se necessário): `pip install Pillow`
 2. Execute: `python tools/generate_preview.py`
-3. O arquivo será salvo em `dashboard/preview.png`
+3. O script salva:
+   - `dashboard/preview.png` (1200×630, com a logo integrada)
+   - `dashboard/favicon.png` e `dashboard/favicon.ico` (favicons)
+   - variações `dashboard/favicon-16.png`, `-32`, `-48`, `-64`, `-128`, `-256`, `-512`
 
 Personalização rápida:
-- Edite `tools/generate_preview.py` para alterar paleta de cores, textos dos cards e fontes.
-- Substitua o bloco “DV” pelo seu logotipo (PNG/SVG) se desejar.
+- Ajuste cores, textos e fontes em `tools/generate_preview.py`.
+- Substitua a imagem em `dashboard/logo vazada FH Data.png` para atualizar o branding.
 
 ### Metadados e Favicon (Compartilhamento)
 
-Para melhorar o compartilhamento em redes sociais e mensageria, as páginas `index.html` (landing) e `dashboard_vendas.html` incluem metatags **OpenGraph** e **Twitter Cards**, usando `preview.png` como imagem destacada. Também foi adicionado um `favicon.png` (gerado automaticamente) para reforçar a identidade visual.
+As páginas `index.html` (landing) e `dashboard_vendas.html` foram atualizadas com metatags **OpenGraph** e **Twitter Cards** apontando para a **logo** em URL absoluto, garantindo a miniatura correta.
 
-- OpenGraph/Twitter: título, descrição e imagem (`preview.png`)
-- Favicon: arquivo `dashboard/favicon.png` referenciado nos HTMLs
-- Geração: o mesmo script `tools/generate_preview.py` cria `dashboard/preview.png` e `dashboard/favicon.png`
+- OpenGraph/Twitter: imagem `dashboard/logo vazada FH Data.png` (URL absoluto)
+- Favicon: `dashboard/favicon.ico` + variações PNG (16–512) e `dashboard/favicon.png`
+- Geração: `tools/generate_preview.py` cria todas as imagens automaticamente
 
 ## Resultados Chave e Apresentação:
 

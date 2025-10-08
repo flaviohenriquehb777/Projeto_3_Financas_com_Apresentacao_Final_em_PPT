@@ -55,11 +55,40 @@ font_small = load_font(18)
 font_chip = load_font(16)
 font_btn = load_font(22)
 
-dv_text = "DV"
-bbox = draw.textbbox((0, 0), dv_text, font=font_title)
-tw = bbox[2] - bbox[0]
-th = bbox[3] - bbox[1]
-draw.text((logo_x + (logo_size - tw) / 2, logo_y + (logo_size - th) / 2), dv_text, fill=PRIMARY, font=font_title)
+def find_logo_path():
+    candidates = [
+        "dashboard/logo vazada FH Data.png",
+        "dashboard/logo_fh.png",
+        "dashboard/brand.png",
+        "dashboard/logo.png",
+        "dashboard/brand.jpg",
+        "dashboard/logo.jpg",
+    ]
+    return next((p for p in candidates if os.path.exists(p)), None)
+
+def paste_logo_in_box(img, box_x, box_y, box_size):
+    path = find_logo_path()
+    if not path:
+        # fallback: monograma DV
+        dv_text = "DV"
+        bbox = draw.textbbox((0, 0), dv_text, font=font_title)
+        tw = bbox[2] - bbox[0]
+        th = bbox[3] - bbox[1]
+        draw.text((box_x + (box_size - tw) / 2, box_y + (box_size - th) / 2), dv_text, fill=PRIMARY, font=font_title)
+        return
+
+    logo = Image.open(path).convert("RGBA")
+    margin = 12
+    target = box_size - margin * 2
+    w, h = logo.size
+    scale = target / max(w, h)
+    new_size = (max(1, int(w * scale)), max(1, int(h * scale)))
+    logo_resized = logo.resize(new_size, Image.LANCZOS)
+    x = box_x + (box_size - new_size[0]) // 2
+    y = box_y + (box_size - new_size[1]) // 2
+    img.paste(logo_resized, (x, y), logo_resized)
+
+paste_logo_in_box(img, logo_x, logo_y, logo_size)
 
 title = "Dashboard de Vendas"
 subtitle = "Clique para abrir o dashboard interativo"
@@ -166,34 +195,35 @@ img.save(output_path, format="PNG", optimize=True)
 print(f"Gerado: {output_path}")
 
 def generate_favicon_from_logo():
-    """Gera dashboard/favicon.png a partir de uma logo fornecida, com fallback para ícone genérico."""
+    """Gera favicon em múltiplas resoluções (PNG + ICO) a partir da logo, com fallback."""
     FAV_SIZE = 512
-    favicon_path = "dashboard/favicon.png"
-    candidates = [
-        "dashboard/logo vazada FH Data.png",  # novo nome fornecido
-        "dashboard/logo_fh.png",  # preferido
-        "dashboard/brand.png",
-        "dashboard/logo.png",
-        "dashboard/brand.jpg",
-        "dashboard/logo.jpg",
-    ]
-
-    logo_path = next((p for p in candidates if os.path.exists(p)), None)
+    favicon_png_path = "dashboard/favicon.png"
+    favicon_ico_path = "dashboard/favicon.ico"
+    sizes = [16, 32, 48, 64, 128, 256, 512]
+    logo_path = find_logo_path()
     if logo_path:
-        # Monta canvas transparente e centraliza a logo preservando proporção
+        base = Image.open(logo_path).convert("RGBA")
+        # PNG 512x512
         canvas = Image.new("RGBA", (FAV_SIZE, FAV_SIZE), (0, 0, 0, 0))
-        logo = Image.open(logo_path).convert("RGBA")
         margin = 16
         target = FAV_SIZE - margin * 2
-        w, h = logo.size
+        w, h = base.size
         scale = target / max(w, h)
         new_size = (max(1, int(w * scale)), max(1, int(h * scale)))
-        logo_resized = logo.resize(new_size, Image.LANCZOS)
+        resized = base.resize(new_size, Image.LANCZOS)
         x = (FAV_SIZE - new_size[0]) // 2
         y = (FAV_SIZE - new_size[1]) // 2
-        canvas.paste(logo_resized, (x, y), logo_resized)
-        canvas.save(favicon_path, format="PNG", optimize=True)
-        print(f"Gerado: {favicon_path} (from {logo_path})")
+        canvas.paste(resized, (x, y), resized)
+        canvas.save(favicon_png_path, format="PNG", optimize=True)
+        # ICO multiresolução
+        ico_base = Image.new("RGBA", (FAV_SIZE, FAV_SIZE), (0, 0, 0, 0))
+        ico_base.paste(resized, (x, y), resized)
+        ico_base.save(favicon_ico_path, sizes=[(s, s) for s in sizes])
+        # PNGs por tamanho
+        for s in sizes:
+            canvas_s = canvas.resize((s, s), Image.LANCZOS)
+            canvas_s.save(f"dashboard/favicon-{s}.png", format="PNG", optimize=True)
+        print(f"Gerado: {favicon_png_path}, {favicon_ico_path} e variações PNG (from {logo_path})")
         return
 
     # Fallback: ícone minimalista se a logo não estiver presente
@@ -208,9 +238,15 @@ def generate_favicon_from_logo():
     ltw = bbox_logo[2] - bbox_logo[0]
     lth = bbox_logo[3] - bbox_logo[1]
     draw.text(((FAV_SIZE - ltw) / 2, (FAV_SIZE - lth) / 2 - 6), logo_text, fill=PRIMARY, font=font_logo)
-    fav.save(favicon_path, format="PNG", optimize=True)
-    print(f"Gerado: {favicon_path} (fallback)")
+    fav.save(favicon_png_path, format="PNG", optimize=True)
+    # também gerar um ICO simples
+    fav_rgb = fav.convert("RGB")
+    fav_rgb.save(favicon_ico_path, sizes=[(s, s) for s in sizes])
+    print(f"Gerado: {favicon_png_path} e {favicon_ico_path} (fallback)")
 
 
 # Executa geração de favicon ao final
 generate_favicon_from_logo()
+
+# Salvar a miniatura/preview
+img.save("dashboard/preview.png", format="PNG", optimize=True)
