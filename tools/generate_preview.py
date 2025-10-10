@@ -164,20 +164,11 @@ for label, value in categories:
     draw.rounded_rectangle((bx, bar_base_y - h, bx + bar_w, bar_base_y), radius=8, fill=PRIMARY)
     bx += bar_w + bar_gap
 
-# Série de linha (tendência)
-import math
-points = []
-px = chart_left + 26
-for i in range(12):
-    t = i / 11
-    y = chart_top + 40 + int(60 * math.sin(t * math.pi) + 40 * t)
-    points.append((px + i * 60, y))
-for i in range(len(points) - 1):
-    draw.line((points[i][0], points[i][1], points[i+1][0], points[i+1][1]), fill=PRIMARY_DARK, width=3)
+# (Removido) Série de linha para não cruzar as barras e poluir visual
 
 # Mini pizza (segmentos)
 pie_x = chart_left + chart_w - 170
-pie_y = chart_top + 60
+pie_y = chart_top + 120  # baixar mais o gráfico de pizza para ficar dentro da área
 r = 60
 draw.ellipse((pie_x - r, pie_y - r, pie_x + r, pie_y + r), fill=SURFACE)
 pie_slices = [(GREEN, 140), (PRIMARY, 120), (ORANGE, 60), (RED, 40)]
