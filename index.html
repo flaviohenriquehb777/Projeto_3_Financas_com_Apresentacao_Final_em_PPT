@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard de Vendas</title>
+  <meta name="description" content="Explore tendências, categorias e desempenho por segmento. Acesse o dashboard interativo de vendas." />
+  <link rel="canonical" href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/" />
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:title" content="Dashboard de Vendas" />
+  <meta property="og:description" content="Explore tendências, categorias e desempenho por segmento. Clique para abrir o dashboard interativo." />
+  <meta property="og:url" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/" />
+  <meta property="og:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/preview.png" />
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dashboard de Vendas" />
+  <meta name="twitter:description" content="Explore tendências, categorias e desempenho por segmento. Clique para abrir o dashboard interativo." />
+  <meta name="twitter:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/preview.png" />
+  <!-- Favicon -->
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" href="./favicon.png" sizes="512x512" />
+  <link rel="icon" type="image/png" href="./favicon-256.png" sizes="256x256" />
+  <link rel="icon" type="image/png" href="./favicon-128.png" sizes="128x128" />
+  <link rel="icon" type="image/png" href="./favicon-64.png" sizes="64x64" />
+  <link rel="icon" type="image/png" href="./favicon-32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="./favicon-16.png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="./favicon.png" />
+  <!-- Favicon -->
+  <link rel="icon" href="./favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="./favicon.png" />
+  <style>
+    :root {
+      --bg: #0f0f12;
+      --card: #15151b;
+      --text: #eaeaea;
+      --muted: #a8a8b3;
+      --primary: #4dabf5;
+      --primary-600: #339af0;
+      --border: #2a2a33;
+    }
+    html, body { height: 100%; }
+    body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; display:flex; align-items:center; justify-content:center; margin:0; }
+    .card { max-width: 780px; width: 92%; padding: 28px; border-radius: 16px; border: 1px solid var(--border); background: linear-gradient(180deg, #14141a 0%, var(--card) 100%); box-shadow: 0 18px 50px rgba(0,0,0,0.35); }
+    .header { display:flex; align-items:center; gap: 16px; }
+    .logo { width: 44px; height: 44px; border-radius: 8px; background: transparent; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .logo img { width: 100%; height: 100%; object-fit: contain; }
+    h1 { font-size: 1.6rem; font-weight:700; margin:0; }
+    .desc { margin: 8px 0 18px; color: var(--muted); line-height:1.6; }
+    .metrics { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 10px 0 22px; }
+    .metric { background:#1a1a21; border:1px solid #24242b; border-radius: 10px; padding: 12px; }
+    .metric .label { font-size: 12px; color: var(--muted); }
+    .metric .value { font-size: 18px; font-weight: 700; color: #dfe6ef; }
+    .actions { display:flex; gap:12px; align-items:center; }
+    .btn { appearance:none; border:1px solid transparent; background: var(--primary); color:#0b1b2a; font-weight:700; padding: 12px 18px; border-radius: 10px; cursor:pointer; transition: all .18s ease; text-decoration:none; display:inline-flex; align-items:center; gap:10px; }
+    .btn:hover { background: var(--primary-600); transform: translateY(-1px); }
+    .link { color: #7bd389; text-decoration: none; }
+    .link:hover { text-decoration: underline; }
+    .hint { margin-top: 12px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 640px) {
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .actions { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card" aria-label="Acesso ao dashboard de vendas">
+    <div class="header">
+      <div class="logo">
+        <img src="./logo_fh.png" alt="Logo FH Data" />
+      </div>
+      <div>
+        <h1>Dashboard de Vendas</h1>
+        <p class="desc">Explore tendências, categorias e desempenho por segmento. Clique para abrir o dashboard interativo.</p>
+      </div>
+    </div>
+
+    <section class="metrics" aria-label="Resumo">
+      <div class="metric"><div class="label">Visualizações</div><div class="value">Tempo real</div></div>
+      <div class="metric"><div class="label">Filtros</div><div class="value">Ano, Região, Segmento</div></div>
+      <div class="metric"><div class="label">Exportação</div><div class="value">CSV e PDF</div></div>
+    </section>
+
+    <div class="actions">
+      <a href="./dashboard_vendas.html" class="btn" aria-label="Abrir dashboard interativo">
+        Abrir Dashboard
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M7 17L17 7" stroke="#0b1b2a" stroke-width="2" stroke-linecap="round"/>
+          <path d="M9 7H17V15" stroke="#0b1b2a" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </a>
+      <a href="./dashboard_vendas.html" class="link">Link direto para o arquivo</a>
+    </div>
+
+    <p class="hint">Se não abrir, verifique sua conexão e tente novamente.</p>
+  </main>
+</body>
+</html>
