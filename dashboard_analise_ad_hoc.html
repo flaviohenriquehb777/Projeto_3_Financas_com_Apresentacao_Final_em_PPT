@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard de Análise Ad Hoc</title>
+  <meta name="description" content="Análise ad hoc com gráficos dinâmicos: vendas por ano, mês/ano, categoria/ano, top 10 produtos e produtos mais vendidos por ano. Exportação em PDF com explicações." />
+  <link rel="canonical" href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_analise_ad_hoc.html" />
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:title" content="Dashboard de Análise Ad Hoc" />
+  <meta property="og:description" content="Gráficos interativos e exportação em PDF com análise detalhada de vendas." />
+  <meta property="og:url" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/dashboard_analise_ad_hoc.html" />
+  <meta property="og:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/preview.png" />
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dashboard de Análise Ad Hoc" />
+  <meta name="twitter:description" content="Gráficos interativos e exportação em PDF com análise detalhada de vendas." />
+  <meta name="twitter:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/preview.png" />
+  <!-- Favicon: usar exclusivamente favicon_logo.png (PNG) como principal -->
+  <link rel="icon" type="image/png" href="./favicon_logo.png?v=2025" sizes="32x32" />
+  <link rel="icon" type="image/png" href="./favicon_logo.png?v=2025" sizes="any" />
+  <link rel="shortcut icon" type="image/png" href="./favicon_logo.png?v=2025" />
+  <link rel="apple-touch-icon" href="./favicon_logo.png?v=2025" />
+  <!-- Libs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f0f12;
+      --panel: #17171b;
+      --panel-2: #1d1d22;
+      --text: #e6e6e6;
+      --muted: #a6a6ad;
+      --accent: #4f7cf3;
+      --ok: #36c38b;
+      --warn: #f3b04f;
+      --danger: #f35f4f;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif; }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; background: var(--panel); border-bottom: 1px solid #25252b;
+      position: sticky; top: 0; z-index: 10;
+    }
+    header h1 { margin: 0; font-size: 20px; letter-spacing: 0.2px; }
+    .actions { display: flex; gap: 8px; }
+    button {
+      background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 600;
+    }
+    button.secondary { background: var(--panel-2); color: var(--text); border: 1px solid #2a2a30; }
+    main { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+    section.card { background: var(--panel); border: 1px solid #222229; border-radius: 14px; padding: 16px; margin-bottom: 18px; }
+    .card h2 { margin: 0 0 12px; font-size: 18px; }
+    .grid { display: grid; gap: 16px; }
+    .grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    canvas { background: var(--panel-2); border-radius: 10px; padding: 10px; cursor: auto !important; }
+    .chartjs-render-monitor { cursor: auto !important; }
+    /* Cursor padrão (seta) para o gráfico Mês/Ano (força também classe do Chart.js) */
+    #chartMesAno, #chartMesAno:hover { cursor: auto !important; }
+    .chartjs-render-monitor#chartMesAno, .chartjs-render-monitor#chartMesAno:hover { cursor: auto !important; }
+    p.explain { color: var(--muted); line-height: 1.5; margin-top: 10px; }
+    .footer-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .legend { font-size: 12px; color: var(--muted); }
+    @media (max-width: 900px) { .grid.cols-2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dashboard de Análise Ad Hoc</h1>
+    <div class="actions">
+      <button id="btnClear">Limpar seleção</button>
+      <button id="btnExport">Exportar PDF</button>
+      <a href="./index.html" style="text-decoration:none"><button class="secondary">Voltar</button></a>
+    </div>
+  </header>
+
+  <main id="content">
+    <!-- Vendas por Ano -->
+    <section class="card">
+      <h2>Total de Vendas por Ano</h2>
+      <!-- Versão Matplotlib (PNG) -->
+      <iframe id="iframeVendasAno" src="./interactive_charts/vendas_por_ano.html?v=2024" title="Vendas por Ano" style="width:100%; max-width:900px; height:520px; display:block; margin:0 auto; border:0; background:transparent; border-radius:10px;"></iframe>
+      <p id="textoAno" class="explain"></p>
+    </section>
+
+    <!-- Vendas por Mês e Ano -->
+    <section class="card">
+      <h2>Vendas Totais por Mês e Ano</h2>
+      <canvas id="chartMesAno" height="240" style="cursor: default !important;"></canvas>
+      <p id="textoMesAno" class="explain"></p>
+      <div class="legend">Dica: Passe o mouse para ver valores por mês/ano.</div>
+    </section>
+
+    <!-- Vendas por Categoria e Ano -->
+    <section class="card">
+      <h2>Total de Vendas por Categoria e Ano</h2>
+      <canvas id="chartCategoriaAno" height="140"></canvas>
+      <p id="textoCategoriaAno" class="explain"></p>
+    </section>
+
+    <!-- Top 10 Produtos -->
+    <section class="card">
+      <h2>Top 10 Produtos Mais Vendidos</h2>
+      <canvas id="chartTop10" height="200"></canvas>
+      <p id="textoTop10" class="explain"></p>
+    </section>
+
+    <!-- Produtos Mais Vendidos por Ano -->
+    <section class="card">
+      <h2>Produtos Mais Vendidos por Ano</h2>
+      <canvas id="chartProdutosAno" height="180"></canvas>
+      <p id="textoProdutosAno" class="explain"></p>
+      <div class="footer-note">Os produtos do Top 10 geral são avaliados em cada ano.</div>
+    </section>
+  </main>
+
+  <script>
+    // Registro e defaults do Chart.js + Datalabels
+    Chart.register(ChartDataLabels);
+    Chart.defaults.color = '#e6e6e6';
+    Chart.defaults.font.family = "Segoe UI, Arial, sans-serif";
+    const datalabelsDefaults = {
+      color: '#e6e6e6',
+      anchor: 'end',
+      align: 'end',
+      formatter: (value) => toMilBRL(value)
+    };
+
+    // Nomes completos dos meses em português
+    const MONTHS_PT = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"]; 
+
+    // Utilidades de agrupamento
+    function sumBy(arr, key) {
+      const map = new Map();
+      for (const r of arr) {
+        const k = r[key];
+        const v = Number(r.Sales || r.sales || 0);
+        if (!isFinite(v)) continue;
+        map.set(k, (map.get(k) || 0) + v);
+      }
+      return map;
+    }
+    function sumBy2(arr, keyA, keyB) {
+      const map = new Map();
+      for (const r of arr) {
+        const a = r[keyA];
+        const b = r[keyB];
+        const v = Number(r.Sales || r.sales || 0);
+        if (!isFinite(v)) continue;
+        const mk = `${a}__${b}`;
+        map.set(mk, (map.get(mk) || 0) + v);
+      }
+      return map; // chave combinada a__b -> soma
+    }
+    function toNumber(n) { const v = Number(n); return isFinite(v) ? v : 0; }
+
+    async function loadExcel() {
+      async function fetchBuffer(path) {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`Falha ao baixar ${path}: ${res.status}`);
+        return await res.arrayBuffer();
+      }
+      let buf;
+      try {
+        buf = await fetchBuffer('./baseLimpa.xlsx');
+      } catch (e) {
+        buf = await fetchBuffer('../baseLimpa.xlsx');
+      }
+      const wb = XLSX.read(buf, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { defval: null });
+      // Normaliza colunas esperadas (preferir Ano explícito; evitar converter número em Date)
+      for (const r of rows) {
+        // tenta nomes usuais de data
+        const dt = r['Order Date'] || r['Data do Pedido'] || r['order_date'] || r['OrderDate'];
+        const d = typeof dt === 'string' ? new Date(dt) : (dt instanceof Date ? dt : null);
+        // usa Ano se já existir; caso contrário extrai do Date
+        const anoRaw = r['Ano'] ?? r['Year'];
+        const ano = Number.isFinite(Number(anoRaw)) ? Number(anoRaw) : (d && d.getFullYear ? d.getFullYear() : NaN);
+        let mesRaw = r['Mês'] || r['Mes'] || r['Month'];
+        let mes = Number.isFinite(Number(mesRaw)) ? Number(mesRaw) : (d && d.getMonth ? (d.getMonth() + 1) : NaN);
+        r.Ano = Number(ano);
+        r.Mes = Number(mes);
+        r.Category = r.Category || r['Categoria'] || r['Category Name'] || 'N/A';
+        r['Product Name'] = r['Product Name'] || r['Produto'] || r['Nome do Produto'] || 'Produto';
+        r.Sales = toNumber(r.Sales || r['Vendas'] || r['Sales Amount'] || r['Valor']);
+      }
+      return rows.filter(r => isFinite(r.Ano) && isFinite(r.Mes));
+    }
+
+    function makePalette(n) {
+      const base = ['#4f7cf3','#36c38b','#f3b04f','#f35f4f','#8a5cf3','#4fd2f3','#c36fd1','#7bd36d','#ec7fb4','#8cd3f3','#f38f4f','#5f9cf3'];
+      const out = [];
+      for (let i=0;i<n;i++) out.push(base[i % base.length]);
+      return out;
+    }
+    // Paleta específica para anos 2015–2018, garantindo distinção entre 2017 e 2018
+    function colorsForYears(anos) {
+      const known = {
+        2015: '#4f7cf3', // azul
+        2016: '#8a5cf3', // roxo
+        2017: '#f3b04f', // laranja
+        2018: '#51cf66'  // verde (mais distinto de 2017)
+      };
+      const out = [];
+      for (const a of anos) {
+        out.push(known[a] || makePalette(anos.length)[out.length]);
+      }
+      return out;
+    }
+
+    function formatBRL(v) {
+      return (new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })).format(v);
+    }
+
+    function toMil(v) {
+      return v/1000;
+    }
+    function toMilBRL(v, decimals=1) {
+      const mil = toMil(v);
+      return `R$ ${mil.toLocaleString('pt-BR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })} mil`;
+    }
+
+    async function init() {
+      const data = await loadExcel();
+
+      // 1) Vendas por Ano
+      const vendasAno = Array.from(sumBy(data, 'Ano').entries()).sort((a,b)=>a[0]-b[0]);
+      const mapAnoValor = new Map(vendasAno);
+      const anosUnicos = [...new Set(data.map(r=>r.Ano))].sort();
+      const totalPeriodo = vendasAno.reduce((s, [,v])=> s+v, 0);
+      const rangeLabelAno = (anosUnicos.includes(2015) && anosUnicos.includes(2016) && anosUnicos.includes(2017) && anosUnicos.includes(2018))
+        ? 'de 2015 - 2018' : `de ${anosUnicos[0]} - ${anosUnicos[anosUnicos.length-1]}`;
+      document.getElementById('textoAno').textContent = `Total de vendas (${rangeLabelAno}): ${formatBRL(totalPeriodo)}`;
+
+      // Estado global de seleção e helpers
+      const selection = { year: null, product: null, category: null };
+      function setSelection(upd) {
+        if (upd.hasOwnProperty('year')) selection.year = upd.year;
+        if (upd.hasOwnProperty('product')) selection.product = upd.product;
+        if (upd.hasOwnProperty('category')) selection.category = upd.category;
+        applySelection();
+      }
+      function clearSelection() {
+        selection.year = null; selection.product = null; selection.category = null; applySelection();
+      }
+      function applySelection() {
+        const dim = 'rgba(255,255,255,0.18)';
+        // 2) Vendas por Mês e Ano
+        if (typeof chartMesAno !== 'undefined') {
+          if (selection.year != null && chartMesAno._defaultBorderColors) {
+            const idxYear = anosUnicos.indexOf(selection.year);
+            chartMesAno.data.datasets.forEach((ds, di) => {
+              const dimArr = Array(ds.data.length).fill(dim);
+              if (di === idxYear) {
+                const whiteArr = Array(ds.data.length).fill('#ffffff');
+                ds.borderColor = whiteArr.slice();
+                ds.backgroundColor = whiteArr.slice();
+                ds.borderWidth = 2;
+              } else {
+                ds.borderColor = dimArr.slice();
+                ds.backgroundColor = dimArr.slice();
+                ds.borderWidth = 1;
+              }
+            });
+            chartMesAno.update();
+            const elMes = document.getElementById('textoMesAno');
+            const v = mapAnoValor.get(selection.year) || 0;
+            elMes.textContent = `Total de vendas em ${selection.year}: ${formatBRL(v)}`;
+          } else if (chartMesAno._defaultBorderColors) {
+            chartMesAno.data.datasets.forEach((ds, di) => {
+              ds.borderColor = chartMesAno._defaultBorderColors[di].slice();
+              ds.backgroundColor = chartMesAno._defaultBackgroundColors[di].slice();
+              ds.borderWidth = 1;
+            });
+            chartMesAno.update();
+            const elMes = document.getElementById('textoMesAno');
+            elMes.textContent = defaultTextoMesAno;
+          }
+        }
+        // 3) Categoria/Ano
+        if (typeof chartCatAno !== 'undefined') {
+          if (selection.year != null && chartCatAno._defaultColors) {
+            const idxYear = anosUnicos.indexOf(selection.year);
+            chartCatAno.data.datasets.forEach((ds) => {
+              const arr = Array(anosUnicos.length).fill(dim);
+              if (idxYear >= 0) arr[idxYear] = '#ffffff';
+              ds.backgroundColor = arr;
+              ds.borderColor = arr.map((c,i)=> (i===idxYear? '#ffffff' : undefined));
+              ds.borderWidth = 1;
+            });
+            chartCatAno.update();
+          } else if (chartCatAno._defaultColors) {
+            chartCatAno.data.datasets.forEach((ds, di) => {
+              ds.backgroundColor = chartCatAno._defaultColors[di].slice();
+              ds.borderColor = undefined;
+              ds.borderWidth = 0;
+            });
+            chartCatAno.update();
+          }
+        }
+        // 5) Produtos/Ano
+        if (typeof chartProdAno !== 'undefined') {
+          if (chartProdAno._defaultColors) {
+            const idxYear = selection.year != null ? anosUnicos.indexOf(selection.year) : -1;
+            const idxProd = selection.product != null ? top10Names.indexOf(selection.product) : -1;
+            const hasSel = (idxYear >= 0) || (idxProd >= 0);
+            if (!hasSel) {
+              // sem seleção: restaurar completamente cores e bordas originais
+              chartProdAno.data.datasets.forEach((ds, di) => {
+                ds.backgroundColor = chartProdAno._defaultColors[di].slice();
+                ds.borderColor = undefined;
+                ds.borderWidth = 0;
+              });
+              chartProdAno.update();
+            } else {
+              chartProdAno.data.datasets.forEach((ds, di) => {
+                const arr = Array(chartProdAno.data.labels.length).fill(dim);
+                if (idxYear >= 0 && di === idxYear && idxProd < 0) {
+                  // ano selecionado: destaca todas barras do ano
+                  for (let i=0;i<arr.length;i++) arr[i] = '#ffffff';
+                }
+                if (idxProd >= 0 && (idxYear < 0 || di === idxYear)) {
+                  // produto selecionado (com ou sem ano): destaca apenas o produto
+                  arr[idxProd] = '#ffffff';
+                }
+                ds.backgroundColor = arr;
+                ds.borderColor = arr.map((c,i)=> (c==='#ffffff'? '#ffffff' : undefined));
+                ds.borderWidth = (arr.some(c=>c==='#ffffff')) ? 2 : 0;
+              });
+              chartProdAno.update();
+            }
+          }
+          // Atualiza texto padrão conforme seleção
+          const elTexto = document.getElementById('textoProdutosAno');
+          if (selection.year != null && selection.product == null) {
+            const idxYear = anosUnicos.indexOf(selection.year);
+            const totalAno = chartProdAno.data.datasets[idxYear].data.reduce((s,v)=>s+(v||0),0);
+            elTexto.textContent = `Total de vendas no ano ${selection.year}: ${toMilBRL(totalAno)}`;
+          } else if (selection.product != null && selection.year == null) {
+            const yearly = anosUnicos.map(a => [a, byProdAno.get(`${selection.product}__${a}`) || 0]);
+            const nonZero = yearly.filter(([_,v])=>v>0).map(([a,v])=> `${a}: ${toMilBRL(v)}`);
+            const total = yearly.reduce((s,[,v])=>s+v,0);
+            elTexto.textContent = `${selection.product} — ${nonZero.join(' · ')} (Total: ${toMilBRL(total)})`;
+          } else if (selection.year != null && selection.product != null) {
+            const v = byProdAno.get(`${selection.product}__${selection.year}`) || 0;
+            elTexto.textContent = `${selection.product} — ${selection.year}: ${toMilBRL(v)}`;
+          } else {
+            elTexto.textContent = defaultTextoProdutosAno;
+          }
+        }
+      }
+
+      // 2) Vendas por Mês e Ano
+      const byMesAno = sumBy2(data, 'Mes', 'Ano');
+      // anosUnicos já calculado acima
+      const meses = Array.from({length:12}, (_,i)=>i+1);
+      const yearColors = colorsForYears(anosUnicos);
+      const datasetsMesAno = anosUnicos.map((ano, idx)=>{
+        const col = yearColors[idx];
+        const perPoint = Array(meses.length).fill(col);
+        return {
+          label: String(ano),
+          data: meses.map(m => byMesAno.get(`${m}__${ano}`) || 0),
+          borderColor: perPoint.slice(),
+          backgroundColor: perPoint.slice(),
+          fill: false
+        };
+      });
+      // Índice do maior valor por mês, para datalabels verticais no topo
+      const maxIndexByMonth = meses.map((mIdx) => {
+        let bestIdx = 0, bestVal = -Infinity;
+        anosUnicos.forEach((ano, di) => {
+          const v = byMesAno.get(`${mIdx}__${ano}`) || 0;
+          if (v > bestVal) { bestVal = v; bestIdx = di; }
+        });
+        return bestIdx;
+      });
+      const ctxMesAno = document.getElementById('chartMesAno');
+      // Converte para barras agrupadas por mês (uma cor por ano)
+      const chartMesAno = new Chart(ctxMesAno, {
+        type: 'bar',
+        data: { labels: MONTHS_PT, datasets: datasetsMesAno },
+        options: {
+          layout: { padding: { top: 64 } },
+          onHover: (event, elements, chart) => { chart.canvas.style.cursor = 'auto'; },
+          plugins: {
+            legend: { labels: { color: '#e6e6e6' } },
+            datalabels: {
+              display: (ctx) => {
+                const i = ctx.dataIndex; // mês
+                return maxIndexByMonth[i] === ctx.datasetIndex && ctx.dataset.data[i] > 0;
+              },
+              formatter: (v) => toMilBRL(v),
+              color: '#f3b04f',
+              anchor: 'end',
+              align: 'end',
+              rotation: -90,
+              offset: 10,
+              clip: false,
+              font: { size: 12, weight: 'bold' }
+            },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${formatBRL(ctx.parsed.y)}`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: '#e6e6e6' } },
+            y: { ticks: { display: false }, grid: { display: false } }
+          },
+          onClick: (evt) => {
+            // Toggle de seleção: clique em uma barra mostra mês/ano; clicar de novo limpa
+            const points = chartMesAno.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            const elTexto = document.getElementById('textoMesAno');
+            if (!points.length) {
+              chartMesAno._selected = null;
+              // restaura cores padrão por dataset
+              chartMesAno.data.datasets.forEach((ds, di) => {
+                ds.backgroundColor = chartMesAno._defaultColors ? chartMesAno._defaultColors[di] : ds.backgroundColor;
+                ds.borderColor = undefined;
+                ds.borderWidth = 0;
+              });
+              chartMesAno.update();
+              elTexto.textContent = defaultTextoMesAno;
+              // limpa seleção global
+              clearSelection();
+              return;
+            }
+            const { datasetIndex, index } = points[0];
+            const selectedKey = `${datasetIndex}-${index}`;
+            const defaultColor = chartMesAno._defaultColors[datasetIndex];
+            if (chartMesAno._selected === selectedKey) {
+              chartMesAno._selected = null;
+              // restaura TODAS as barras para o estado original
+              chartMesAno.data.datasets.forEach((ds, di) => {
+                ds.backgroundColor = chartMesAno._defaultColors ? chartMesAno._defaultColors[di] : ds.backgroundColor;
+                ds.borderColor = undefined;
+                ds.borderWidth = 0;
+              });
+              chartMesAno.update();
+              elTexto.textContent = defaultTextoMesAno;
+              // limpa seleção global
+              clearSelection();
+              return;
+            }
+            chartMesAno._selected = selectedKey;
+            const anoSel = anosUnicos[datasetIndex];
+            const mesIdx = index; // 0..11
+            const valor = chartMesAno.data.datasets[datasetIndex].data[index] || 0;
+            // destaca a barra selecionada (branca) e aplica sombra nas demais
+            const dim = 'rgba(255,255,255,0.18)';
+            chartMesAno.data.datasets.forEach((ds, di) => {
+              const arr = Array(chartMesAno.data.labels.length).fill(dim);
+              if (di === datasetIndex) {
+                arr[index] = '#ffffff';
+              }
+              ds.backgroundColor = arr;
+              ds.borderColor = arr.map((c,i)=> (di===datasetIndex && i===index) ? '#ffffff' : undefined);
+              ds.borderWidth = (di===datasetIndex) ? 2 : 0;
+            });
+            chartMesAno.update();
+            // propaga seleção global de ano e atualiza texto com total do ano
+            setSelection({ year: anoSel });
+            const totalAno = mapAnoValor.get(anoSel) || 0;
+            elTexto.textContent = `Total de vendas em ${anoSel}: ${formatBRL(totalAno)}`;
+          }
+        }
+      });
+      // guarda cores originais por dataset (arrays por ponto) para restaurar no toggle
+      chartMesAno._defaultColors = chartMesAno.data.datasets.map(ds => Array.isArray(ds.backgroundColor)
+        ? ds.backgroundColor.map(c=>c)
+        : Array(chartMesAno.data.labels.length).fill(ds.backgroundColor));
+      // também guarda cores originais separadas para uso pelo applySelection
+      chartMesAno._defaultBackgroundColors = chartMesAno.data.datasets.map(ds => Array.isArray(ds.backgroundColor)
+        ? ds.backgroundColor.map(c=>c)
+        : Array(chartMesAno.data.labels.length).fill(ds.backgroundColor));
+      chartMesAno._defaultBorderColors = chartMesAno.data.datasets.map(ds => Array.isArray(ds.borderColor)
+        ? ds.borderColor.map(c=>c)
+        : Array(chartMesAno.data.labels.length).fill(ds.borderColor ?? ds.backgroundColor));
+      // texto: mês/ano pico
+      let pico = { mk: '', v: -Infinity };
+      for (const [mk,v] of byMesAno.entries()) if (v>pico.v) pico = { mk, v };
+      const [mPico, aPico] = pico.mk.split('__').map(x=>Number(x));
+      const defaultTextoMesAno = `Pico de vendas em ${MONTHS_PT[mPico-1]} de ${aPico}, totalizando ${formatBRL(pico.v)}.`;
+      document.getElementById('textoMesAno').textContent = defaultTextoMesAno;
+
+      // Ouve seleção de ano vindo do iframe Plotly e atualiza legenda externa
+      window.addEventListener('message', (ev) => {
+        if (!ev.data || ev.data.type !== 'selectYear') return;
+        const year = ev.data.year;
+        const el = document.getElementById('textoAno');
+        if (year == null) {
+          el.textContent = `Total de vendas (${rangeLabelAno}): ${formatBRL(totalPeriodo)}`;
+          // também limpa seleção no gráfico Mês/Ano e restaura cores
+          if (chartMesAno && chartMesAno._selected) {
+            chartMesAno._selected = null;
+            chartMesAno.data.datasets.forEach((ds, di) => {
+              ds.backgroundColor = chartMesAno._defaultColors[di].map(c=>c);
+              ds.borderColor = undefined;
+              ds.borderWidth = 0;
+            });
+            chartMesAno.update();
+            document.getElementById('textoMesAno').textContent = defaultTextoMesAno;
+          }
+        } else {
+          const v = mapAnoValor.get(Number(year)) || 0;
+          el.textContent = `Total de vendas em ${year}: ${formatBRL(v)}`;
+        }
+      });
+
+      // 3) Vendas por Categoria e Ano
+      const byCatAno = sumBy2(data, 'Category', 'Ano');
+      const categorias = [...new Set(data.map(r=>r.Category))];
+      // Legenda representa as categorias; cada conjunto de barras representa um ano
+      const palette = makePalette(categorias.length);
+      const datasetsCategoria = categorias.map((cat, i)=>({
+        label: String(cat),
+        data: anosUnicos.map(ano => byCatAno.get(`${cat}__${ano}`) || 0),
+        backgroundColor: palette[i]
+      }));
+      // reforço extra para cursor da seta no canvas do primeiro gráfico
+      ctxMesAno.style.cursor = 'default';
+      ctxMesAno.addEventListener('mouseleave', () => { ctxMesAno.style.cursor = 'default'; });
+      ctxMesAno.addEventListener('mousemove', () => { ctxMesAno.style.cursor = 'default'; });
+      const ctxCat = document.getElementById('chartCategoriaAno');
+      let defaultTextoCategoriaAno = '';
+      const chartCatAno = new Chart(ctxCat, {
+        type: 'bar',
+        data: { labels: anosUnicos.map(a=>String(a)), datasets: datasetsCategoria },
+        options: {
+          plugins: {
+            legend: { labels: { color: '#e6e6e6' } },
+            datalabels: datalabelsDefaults
+          },
+          scales: {
+            x: { ticks: { color: '#e6e6e6' } },
+            // Remover eixo Y conforme solicitado
+            y: { display: false }
+          },
+          onClick: (evt) => {
+            const points = chartCatAno.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            const elTexto = document.getElementById('textoCategoriaAno');
+            if (!points.length) {
+              chartCatAno._selected = null;
+              chartCatAno.data.datasets.forEach((ds, di) => {
+                ds.backgroundColor = chartCatAno._defaultColors ? chartCatAno._defaultColors[di] : ds.backgroundColor;
+                ds.borderColor = undefined;
+                ds.borderWidth = 0;
+              });
+              chartCatAno.update();
+              elTexto.textContent = defaultTextoCategoriaAno;
+              // limpa seleção global inteira
+              clearSelection();
+              return;
+            }
+            const { datasetIndex, index } = points[0];
+            const selectedKey = `${datasetIndex}-${index}`;
+            if (chartCatAno._selected === selectedKey) {
+              chartCatAno._selected = null;
+              chartCatAno.data.datasets.forEach((ds, di) => {
+                ds.backgroundColor = chartCatAno._defaultColors ? chartCatAno._defaultColors[di] : ds.backgroundColor;
+                ds.borderColor = undefined;
+                ds.borderWidth = 0;
+              });
+              chartCatAno.update();
+              elTexto.textContent = defaultTextoCategoriaAno;
+              clearSelection();
+              return;
+            }
+            chartCatAno._selected = selectedKey;
+            const valor = chartCatAno.data.datasets[datasetIndex].data[index] || 0;
+            const anoSel = anosUnicos[index];
+            const catSel = categorias[datasetIndex];
+            const dim = 'rgba(255,255,255,0.18)';
+            chartCatAno.data.datasets.forEach((ds, di) => {
+              const arr = Array(chartCatAno.data.labels.length).fill(dim);
+              if (di === datasetIndex) {
+                arr[index] = '#ffffff';
+              }
+              ds.backgroundColor = arr;
+              ds.borderColor = arr.map((c,i)=> (di===datasetIndex && i===index) ? '#ffffff' : undefined);
+              ds.borderWidth = (di===datasetIndex) ? 2 : 0;
+            });
+            chartCatAno.update();
+            elTexto.textContent = `Vendas de ${catSel} em ${anoSel}: ${formatBRL(valor)}`;
+            // propaga ano e categoria
+            setSelection({ year: anoSel, category: catSel });
+          }
+        }
+      });
+      // guarda cores originais para restauração no toggle
+      chartCatAno._defaultColors = chartCatAno.data.datasets.map(ds => Array.isArray(ds.backgroundColor)
+        ? ds.backgroundColor.map(c=>c)
+        : Array(chartCatAno.data.labels.length).fill(ds.backgroundColor));
+      // texto: categoria campeã acumulada
+      const accCat = categorias.map(c => anosUnicos.reduce((s, ano)=> s + (byCatAno.get(`${c}__${ano}`) || 0), 0));
+      const idxMaxCat = accCat.reduce((imax, v, i)=> v>accCat[imax]?i:imax, 0);
+      defaultTextoCategoriaAno = `Categoria com maior faturamento acumulado: ${categorias[idxMaxCat]} (${formatBRL(accCat[idxMaxCat])}).`;
+      document.getElementById('textoCategoriaAno').textContent = defaultTextoCategoriaAno;
+
+      // 4) Top 10 Produtos mais vendidos (geral)
+      const byProduto = sumBy(data, 'Product Name');
+      const top10 = Array.from(byProduto.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
+      const top10FullNames = top10.map(([k])=>k);
+      // Mapa de vendas por produto e ano para breakdown ao clicar
+      const byTopProdAno = sumBy2(data.filter(r=> top10FullNames.includes(r['Product Name'])), 'Product Name', 'Ano');
+      const ctxTop = document.getElementById('chartTop10');
+      const labelsTop = top10.map(([k])=> (k.length>24 ? (k.slice(0,21)+'…') : k));
+      let defaultTextoTop10 = '';
+      const chartTop10 = new Chart(ctxTop, {
+        type: 'bar',
+        data: { labels: labelsTop, datasets: [{ data: top10.map(([,v])=>v), backgroundColor: makePalette(10) }] },
+        options: {
+          indexAxis:'y',
+          plugins:{
+            legend:{ display: false },
+            datalabels: {
+              ...datalabelsDefaults,
+              anchor: 'end', align: 'end'
+            }
+          },
+          scales:{
+            x:{ display: false, grid: { display: false } },
+            y:{ ticks:{ color:'#e6e6e6' } }
+          },
+          onClick: (evt) => {
+            const points = chartTop10.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            const elTexto = document.getElementById('textoTop10');
+            if (!points.length) {
+              chartTop10._selected = null;
+              const ds = chartTop10.data.datasets[0];
+              ds.backgroundColor = chartTop10._defaultColors ? chartTop10._defaultColors[0] : ds.backgroundColor;
+              ds.borderColor = undefined;
+              ds.borderWidth = 0;
+              chartTop10.update();
+              elTexto.textContent = defaultTextoTop10;
+              // limpa seleção global inteira
+              clearSelection();
+              return;
+            }
+            const { index } = points[0];
+            const selectedKey = `0-${index}`;
+            if (chartTop10._selected === selectedKey) {
+              chartTop10._selected = null;
+              const ds = chartTop10.data.datasets[0];
+              ds.backgroundColor = chartTop10._defaultColors ? chartTop10._defaultColors[0] : ds.backgroundColor;
+              ds.borderColor = undefined;
+              ds.borderWidth = 0;
+              chartTop10.update();
+              elTexto.textContent = defaultTextoTop10;
+              clearSelection();
+              return;
+            }
+            chartTop10._selected = selectedKey;
+            const nomeCompleto = top10FullNames[index];
+            const valorTotal = chartTop10.data.datasets[0].data[index] || 0;
+            const dim = 'rgba(255,255,255,0.18)';
+            const ds = chartTop10.data.datasets[0];
+            const arr = Array(chartTop10.data.labels.length).fill(dim);
+            arr[index] = '#ffffff';
+            ds.backgroundColor = arr;
+            ds.borderColor = arr.map((c,i)=> (i===index) ? '#ffffff' : undefined);
+            ds.borderWidth = 2;
+            chartTop10.update();
+            // Breakdown por ano (omitindo anos com zero)
+            const yearly = anosUnicos.map(a => [a, byTopProdAno.get(`${nomeCompleto}__${a}`) || 0]);
+            const nonZero = yearly.filter(([_,v]) => v > 0);
+            const parts = (nonZero.length > 0)
+              ? nonZero.map(([a,v]) => `${a}: ${formatBRL(v)}`)
+              : ["Sem vendas registradas nos anos do período"];
+            elTexto.textContent = `${nomeCompleto} — ${parts.join(' · ')} (Total: ${formatBRL(valorTotal)})`;
+            // propaga produto
+            setSelection({ product: nomeCompleto });
+          }
+        }
+      });
+      // guarda cores originais por ponto para restauração
+      chartTop10._defaultColors = chartTop10.data.datasets.map(ds => Array.isArray(ds.backgroundColor)
+        ? ds.backgroundColor.map(c=>c)
+        : Array(chartTop10.data.labels.length).fill(ds.backgroundColor));
+      defaultTextoTop10 = `Produto líder: ${top10[0][0]} com ${formatBRL(top10[0][1])}.`;
+      document.getElementById('textoTop10').textContent = defaultTextoTop10;
+
+      // 5) Produtos mais vendidos por ano (Top 10 geral pivot)
+      const top10Names = top10.map(([k])=>k);
+      const byProdAno = sumBy2(data.filter(r=> top10Names.includes(r['Product Name'])), 'Product Name', 'Ano');
+      const yearColorsProd = colorsForYears(anosUnicos);
+      const datasetsProdAno = anosUnicos.map((ano, idx)=>({
+        label: String(ano),
+        data: top10Names.map(p => byProdAno.get(`${p}__${ano}`) || 0),
+        backgroundColor: Array(top10Names.length).fill(yearColorsProd[idx])
+      }));
+      const ctxProdAno = document.getElementById('chartProdutosAno');
+      // mostrar datalabel apenas no maior valor por produto
+      const maxIndexByProduct = top10Names.map((pName, pIdx) => {
+        let bestIdx = 0, bestVal = -Infinity;
+        anosUnicos.forEach((ano, di) => {
+          const v = byProdAno.get(`${pName}__${ano}`) || 0;
+          if (v > bestVal) { bestVal = v; bestIdx = di; }
+        });
+        return bestIdx;
+      });
+      let defaultTextoProdutosAno = '';
+      const chartProdAno = new Chart(ctxProdAno, {
+        type: 'bar',
+        data: { labels: top10Names, datasets: datasetsProdAno },
+        options: {
+          indexAxis: 'y',
+          plugins: {
+            legend: { labels: { color: '#e6e6e6' } },
+            title: {
+              display: true,
+              text: 'Produtos Mais Vendidos por Ano',
+              color: '#e6e6e6',
+              font: { size: 16, weight: 'bold' }
+            },
+            datalabels: {
+              display: (ctx) => {
+                const i = ctx.dataIndex; // produto
+                return maxIndexByProduct[i] === ctx.datasetIndex && ctx.dataset.data[i] > 0;
+              },
+              formatter: (v) => toMilBRL(v),
+              color: '#f3b04f',
+              anchor: 'end',
+              align: 'end',
+              clip: false,
+              font: { size: 12, weight: 'bold' }
+            }
+          },
+          scales: {
+            x: { display: false, grid: { display: false } },
+            y: { ticks: { color: '#e6e6e6', autoSkip: false, maxRotation: 0, minRotation: 0 } }
+          },
+          onClick: (evt) => {
+            const points = chartProdAno.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            const elTexto = document.getElementById('textoProdutosAno');
+            if (!points.length) {
+              chartProdAno._selected = null;
+              chartProdAno.data.datasets.forEach((ds, di) => {
+                ds.backgroundColor = chartProdAno._defaultColors ? chartProdAno._defaultColors[di] : ds.backgroundColor;
+                ds.borderColor = undefined;
+                ds.borderWidth = 0;
+              });
+              chartProdAno.update();
+              elTexto.textContent = defaultTextoProdutosAno;
+              // limpa seleção global inteira
+              clearSelection();
+              return;
+            }
+            const { datasetIndex, index } = points[0];
+            const selectedKey = `${datasetIndex}-${index}`;
+            if (chartProdAno._selected === selectedKey) {
+              chartProdAno._selected = null;
+              chartProdAno.data.datasets.forEach((ds, di) => {
+                ds.backgroundColor = chartProdAno._defaultColors ? chartProdAno._defaultColors[di] : ds.backgroundColor;
+                ds.borderColor = undefined;
+                ds.borderWidth = 0;
+              });
+              chartProdAno.update();
+              elTexto.textContent = defaultTextoProdutosAno;
+              clearSelection();
+              return;
+            }
+            chartProdAno._selected = selectedKey;
+            const anoSel = anosUnicos[datasetIndex];
+            const valorSel = chartProdAno.data.datasets[datasetIndex].data[index] || 0;
+            const dim = 'rgba(255,255,255,0.18)';
+            chartProdAno.data.datasets.forEach((ds, di) => {
+              const arr = Array(chartProdAno.data.labels.length).fill(dim);
+              if (di === datasetIndex) {
+                arr[index] = '#ffffff';
+              }
+              ds.backgroundColor = arr;
+              ds.borderColor = arr.map((c,i)=> (di===datasetIndex && i===index) ? '#ffffff' : undefined);
+              ds.borderWidth = (di===datasetIndex) ? 2 : 0;
+            });
+            chartProdAno.update();
+            // valor da barra selecionada (produto naquele ano)
+            elTexto.textContent = `Total de vendas no ano ${anoSel}: ${toMilBRL(valorSel)}`;
+            // propaga ano e produto
+            const prodSel = top10Names[index];
+            setSelection({ year: anoSel, product: prodSel });
+          }
+        }
+      });
+      // guarda cores originais por dataset para restauração
+      chartProdAno._defaultColors = chartProdAno.data.datasets.map(ds => Array.isArray(ds.backgroundColor)
+        ? ds.backgroundColor.map(c=>c)
+        : Array(chartProdAno.data.labels.length).fill(ds.backgroundColor));
+      // texto padrão: instrução de uso
+      defaultTextoProdutosAno = 'Clique em uma barra para ver o total do ano.';
+      document.getElementById('textoProdutosAno').textContent = defaultTextoProdutosAno;
+
+      // Botão: Limpar seleção global e restaurar gráficos
+      const btnClear = document.getElementById('btnClear');
+      function resetAllCharts() {
+        const dimRestore = (chart, defaultColorsArr, labelsLen) => {
+          if (!chart || !defaultColorsArr) return;
+          chart.data.datasets.forEach((ds, di) => {
+            ds.backgroundColor = Array.isArray(defaultColorsArr[di]) ? defaultColorsArr[di].map(c=>c)
+              : Array(labelsLen).fill(defaultColorsArr[di]);
+            ds.borderColor = undefined;
+            ds.borderWidth = 0;
+          });
+          chart.update();
+        };
+        if (typeof chartMesAno !== 'undefined') {
+          chartMesAno._selected = null;
+          resetAllCharts(chartMesAno, chartMesAno._defaultColors, chartMesAno.data.labels.length);
+          document.getElementById('textoMesAno').textContent = defaultTextoMesAno;
+        }
+        if (typeof chartCatAno !== 'undefined') {
+          chartCatAno._selected = null;
+          resetAllCharts(chartCatAno, chartCatAno._defaultColors, chartCatAno.data.labels.length);
+          document.getElementById('textoCategoriaAno').textContent = defaultTextoCategoriaAno;
+        }
+        if (typeof chartTop10 !== 'undefined') {
+          chartTop10._selected = null;
+          const ds = chartTop10.data.datasets[0];
+          ds.backgroundColor = chartTop10._defaultColors ? chartTop10._defaultColors[0].map(c=>c) : ds.backgroundColor;
+          ds.borderColor = undefined; ds.borderWidth = 0; chartTop10.update();
+          document.getElementById('textoTop10').textContent = defaultTextoTop10;
+        }
+        if (typeof chartProdAno !== 'undefined') {
+          chartProdAno._selected = null;
+          resetAllCharts(chartProdAno, chartProdAno._defaultColors, chartProdAno.data.labels.length);
+          document.getElementById('textoProdutosAno').textContent = defaultTextoProdutosAno;
+        }
+      }
+      btnClear.addEventListener('click', () => { resetAllCharts(); clearSelection(); });
+
+      // Exportação em PDF (inclui primeiro gráfico do iframe e os textos de insights)
+      const { jsPDF } = window.jspdf;
+
+      async function getIframeChartImage() {
+        const iframe = document.getElementById('iframeVendasAno');
+        return new Promise((resolve, reject) => {
+          if (!iframe || !iframe.contentWindow) return reject(new Error('iframe não disponível'));
+          const timeout = setTimeout(() => {
+            window.removeEventListener('message', onMsg);
+            reject(new Error('timeout ao obter imagem do iframe'));
+          }, 5000);
+          function onMsg(ev) {
+            if (ev.source !== iframe.contentWindow) return;
+            const data = ev.data;
+            if (!data || data.type !== 'chartImage') return;
+            window.removeEventListener('message', onMsg);
+            clearTimeout(timeout);
+            if (data.error) return reject(new Error(data.error));
+            resolve(data.dataUrl);
+          }
+          window.addEventListener('message', onMsg);
+          try {
+            iframe.contentWindow.postMessage({ type: 'requestChartImage' }, '*');
+          } catch (e) {
+            clearTimeout(timeout);
+            reject(e);
+          }
+        });
+      }
+
+      async function addCanvasImage(pdf, canvasId, title, margin, pageWidth, pageHeight, cursorY) {
+        const canvasEl = document.getElementById(canvasId);
+        if (!canvasEl) return cursorY;
+        const imgData = canvasEl.toDataURL('image/png', 1.0);
+        const imgProps = pdf.getImageProperties(imgData);
+        const maxWidth = pageWidth - margin * 2;
+        const mmHeight = (imgProps.height / imgProps.width) * maxWidth;
+        if (cursorY + mmHeight + 12 > pageHeight - margin) {
+          pdf.addPage();
+          cursorY = margin;
+        }
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(title, margin, cursorY);
+        cursorY += 6;
+        pdf.addImage(imgData, 'PNG', margin, cursorY, maxWidth, mmHeight, undefined, 'FAST');
+        cursorY += mmHeight + 8;
+        return cursorY;
+      }
+
+      document.getElementById('btnExport').addEventListener('click', async () => {
+        const pdf = new jsPDF('p','mm','a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 15;
+        let cursorY = margin;
+
+        // Tema escuro de fundo da página
+        pdf.setFillColor('#0f0f12');
+        pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+        pdf.setTextColor('#e6e6e6');
+
+        // Título
+        pdf.setFont('helvetica', 'bold');
+        pdf.setFontSize(18);
+        pdf.text('Dashboard de Análise Ad Hoc', margin, cursorY);
+        cursorY += 8;
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'normal');
+        pdf.text(`Data do relatório: ${new Date().toLocaleDateString('pt-BR')}`, margin, cursorY);
+        cursorY += 6;
+        pdf.setDrawColor(79, 124, 243);
+        pdf.line(margin, cursorY, pageWidth - margin, cursorY);
+        cursorY += 8;
+
+        // Utilitário para inserir uma seção com título, insight e um bloco visual para o gráfico
+        function addPanelBackground(height) {
+          const x = margin - 3;
+          const w = pageWidth - (margin - 3) * 2;
+          pdf.setFillColor('#1d1d22');
+          pdf.rect(x, cursorY - 4, w, height + 8, 'F');
+        }
+
+        // Primeiro gráfico (iframe Plotly) via imagem
+        try {
+          const imgUrl = await getIframeChartImage();
+          const imgProps = pdf.getImageProperties(imgUrl);
+          const maxWidth = pageWidth - margin * 2;
+          const mmHeight = (imgProps.height / imgProps.width) * maxWidth;
+          if (cursorY + mmHeight + 12 > pageHeight - margin) {
+            pdf.addPage();
+            // pinta fundo escuro na nova página
+            pdf.setFillColor('#0f0f12');
+            pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+            pdf.setTextColor('#e6e6e6');
+            cursorY = margin;
+          }
+          pdf.setFont('helvetica', 'bold');
+          pdf.text('Total de Vendas por Ano', margin, cursorY);
+          cursorY += 6;
+          // insight do gráfico
+          const insightAno = document.getElementById('textoAno')?.textContent || '';
+          if (insightAno) { pdf.setFont('helvetica', 'normal'); pdf.text(insightAno, margin, cursorY); cursorY += 6; }
+          addPanelBackground(mmHeight);
+          pdf.addImage(imgUrl, 'PNG', margin, cursorY, maxWidth, mmHeight, undefined, 'FAST');
+          cursorY += mmHeight + 8;
+        } catch (e) {
+          // Caso falhe, registra aviso e segue
+          pdf.setTextColor('#a6a6ad');
+          pdf.text('Não foi possível incluir o gráfico "Vendas por Ano" do iframe.', margin, cursorY);
+          cursorY += 8;
+          pdf.setTextColor('#e6e6e6');
+        }
+
+        // Demais gráficos (Chart.js) com seus insights em linha
+        async function addChartWithInsight(canvasId, title, insightElId) {
+          const canvasEl = document.getElementById(canvasId);
+          if (!canvasEl) return;
+          const imgData = canvasEl.toDataURL('image/png', 1.0);
+          const imgProps = pdf.getImageProperties(imgData);
+          const maxWidth = pageWidth - margin * 2;
+          const mmHeight = (imgProps.height / imgProps.width) * maxWidth;
+          if (cursorY + mmHeight + 14 > pageHeight - margin) {
+            pdf.addPage();
+            pdf.setFillColor('#0f0f12');
+            pdf.rect(0, 0, pageWidth, pageHeight, 'F');
+            pdf.setTextColor('#e6e6e6');
+            cursorY = margin;
+          }
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(title, margin, cursorY);
+          cursorY += 6;
+          const insight = document.getElementById(insightElId)?.textContent || '';
+          if (insight) { pdf.setFont('helvetica', 'normal'); pdf.text(insight, margin, cursorY); cursorY += 6; }
+          addPanelBackground(mmHeight);
+          pdf.addImage(imgData, 'PNG', margin, cursorY, maxWidth, mmHeight, undefined, 'FAST');
+          cursorY += mmHeight + 8;
+        }
+
+        await addChartWithInsight('chartMesAno', 'Vendas Totais por Mês e Ano', 'textoMesAno');
+        await addChartWithInsight('chartCategoriaAno', 'Vendas por Categoria e Ano', 'textoCategoriaAno');
+        await addChartWithInsight('chartTop10', 'Top 10 Produtos Mais Vendidos', 'textoTop10');
+        await addChartWithInsight('chartProdutosAno', 'Produtos Mais Vendidos por Ano', 'textoProdutosAno');
+
+        // Rodapé
+        pdf.setFontSize(9);
+        pdf.setTextColor('#a6a6ad');
+        pdf.text(`Gerado em ${new Date().toLocaleString('pt-BR')}`, margin, pageHeight - 8);
+
+        pdf.save('dashboard_analise_ad_hoc.pdf');
+      });
+    }
+
+    // Inicializa
+    init().catch(err => {
+      console.error('Falha ao inicializar dashboard:', err);
+      const warn = document.createElement('div');
+      warn.textContent = 'Falha ao carregar dados. Verifique baseLimpa.xlsx.';
+      warn.style.color = '#f35f4f';
+      document.body.appendChild(warn);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Análise de Vendas</title>
+    <meta name="description" content="Análise de vendas com filtros dinâmicos e visualizações interativas (tendência, segmentos, categorias, regiões e top produtos)." />
+    <link rel="canonical" href="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html" />
+    <!-- OpenGraph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Dashboard de Análise de Vendas" />
+    <meta property="og:description" content="Explore métricas, tendências e categorias com filtros avançados e exportação." />
+    <meta property="og:url" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard_vendas.html" />
+    <meta property="og:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/logo%20vazada%20FH%20Data.png" />
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Dashboard de Análise de Vendas" />
+    <meta name="twitter:description" content="Explore métricas, tendências e categorias com filtros avançados e exportação." />
+    <meta name="twitter:image" content="https://flaviohenriquehb777.github.io/Projeto_3_Financas_com_Apresentacao_Final_em_PPT/dashboard/preview.png" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./favicon_logo.png?v=2025" sizes="any" />
+    <link rel="apple-touch-icon" type="image/png" href="./favicon_logo.png?v=2025" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Bibliotecas para exportação de PDF -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.28/dist/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-color: #4dabf5;
+            --hover-color: #339af0;
+            --success-color: #51cf66;
+            --warning-color: #ffd43b;
+            --danger-color: #ff6b6b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .dashboard-header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid #333;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .metric-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .metric-title {
+            font-size: 14px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+        
+        .metric-change {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .chart-container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 300px;
+        }
+
+        /* Contêiner específico para tabela: altura automática para cobrir todo conteúdo */
+        .chart-container.table-card {
+            height: auto;
+        }
+        
+        .filter-section {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, 
+        .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
+            padding: 0 10px;
+        }
+        
+        .col-md-1 { width: 8.33%; }
+        .col-md-2 { width: 16.66%; }
+        .col-md-3 { width: 25%; }
+        .col-md-4 { width: 33.33%; }
+        .col-md-5 { width: 41.66%; }
+        .col-md-6 { width: 50%; }
+        .col-md-7 { width: 58.33%; }
+        .col-md-8 { width: 66.66%; }
+        .col-md-9 { width: 75%; }
+        .col-md-10 { width: 83.33%; }
+        .col-md-11 { width: 91.66%; }
+        .col-md-12 { width: 100%; }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control, .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: var(--text-color);
+            font-size: 14px;
+            min-height: 40px; /* Consistência com botões */
+            height: 40px; /* Alinhamento visual com botões */
+        }
+        
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(77, 171, 245, 0.25);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 16px; /* Proporção adequada */
+            background-color: #444;
+            color: var(--text-color);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600; /* Consistência visual */
+            min-height: 40px; /* Alinhamento com inputs */
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background-color: #555;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+        }
+        
+        .btn-outline-light {
+            background-color: transparent;
+            border: 1px solid #aaa;
+            color: #aaa;
+        }
+        
+        .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        
+        .table th {
+            background-color: #2d2d2d;
+            font-weight: 600;
+        }
+        
+        .table-striped tbody tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .text-end {
+            text-align: right;
+        }
+        
+        .text-muted {
+            color: #aaa;
+        }
+        
+        .mb-0 { margin-bottom: 0; }
+        .mb-2 { margin-bottom: 10px; }
+        .mb-3 { margin-bottom: 15px; }
+        .mb-4 { margin-bottom: 20px; }
+        .mt-2 { margin-top: 10px; }
+        .mt-3 { margin-top: 15px; }
+        .mt-4 { margin-top: 20px; }
+        .me-2 { margin-right: 10px; }
+        
+        .d-flex {
+            display: flex;
+        }
+        
+        .align-items-center {
+            align-items: center;
+        }
+        
+        .align-items-end {
+            align-items: flex-end;
+        }
+        
+        .w-100 {
+            width: 100%;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        
+        .total-sales { color: var(--success-color); }
+        .total-orders { color: var(--accent-color); }
+        .avg-ticket { color: var(--warning-color); }
+        .unique-customers { color: #be4bdb; }
+        .avg-items { color: #20c997; }
+        
+        /* CORREÇÃO: Alinhamento do botão Aplicar Filtros */
+        .filter-button-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end; /* Alinha à direita, acompanhando os demais elementos */
+            height: 100%;
+        }
+
+        /* Estética e responsividade do botão Aplicar Filtros */
+        .apply-filters-btn {
+            letter-spacing: 0.2px;
+        }
+
+        @media (min-width: 769px) {
+            .apply-filters-btn { width: auto !important; }
+        }
+
+        @media (max-width: 768px) {
+            .apply-filters-btn { width: 100%; }
+        }
+        
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+        
+        @media (max-width: 768px) {
+            .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, 
+            .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
+                width: 100%;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-content .text-end {
+                margin-top: 15px;
+                width: 100%;
+                text-align: left;
+            }
+            
+            /* CORREÇÃO: Ajuste mobile para o botão */
+            .filter-button-container {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <h1 class="mb-0">Dashboard de Vendas</h1>
+                    <p class="mb-0 text-muted">Análise completa do desempenho de vendas</p>
+                </div>
+                <div class="text-end">
+                    <button class="btn btn-outline-light me-2" id="export-csv">Exportar CSV</button>
+                    <button class="btn btn-primary" id="export-pdf">Exportar PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <!-- Filtros -->
+        <div class="filter-section">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="year-filter" class="form-label">Ano</label>
+                        <select class="form-select" id="year-filter">
+                            <option value="all">Todos</option>
+                            <option value="2015">2015</option>
+                            <option value="2016">2016</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="region-filter" class="form-label">Região</label>
+                        <select class="form-select" id="region-filter">
+                            <option value="all">Todas</option>
+                            <option value="Central">Central</option>
+                            <option value="East">East</option>
+                            <option value="South">South</option>
+                            <option value="West">West</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="segment-filter" class="form-label">Segmento</label>
+                        <select class="form-select" id="segment-filter">
+                            <option value="all">Todos</option>
+                            <option value="Consumer">Consumer</option>
+                            <option value="Corporate">Corporate</option>
+                            <option value="Home Office">Home Office</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="category-filter" class="form-label">Categoria</label>
+                        <select class="form-select" id="category-filter">
+                            <option value="all">Todas</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="Office Supplies">Office Supplies</option>
+                            <option value="Technology">Technology</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="ship-mode-filter" class="form-label">Modo de Envio</label>
+                        <select class="form-select" id="ship-mode-filter">
+                            <option value="all">Todos</option>
+                            <option value="First Class">First Class</option>
+                            <option value="Second Class">Second Class</option>
+                            <option value="Standard Class">Standard Class</option>
+                            <option value="Same Day">Same Day</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="top-n-filter" class="form-label">Top N</label>
+                        <select class="form-select" id="top-n-filter">
+                            <option value="5">Top 5</option>
+                            <option value="10" selected>Top 10</option>
+                            <option value="15">Top 15</option>
+                            <option value="20">Top 20</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 align-items-end">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="date-range" class="form-label">Intervalo de Datas</label>
+                        <input type="text" class="form-control" id="date-range" placeholder="Selecione um intervalo">
+                    </div>
+                </div>
+                <!-- CORREÇÃO: Container específico para o botão -->
+                <div class="col-md-6">
+                    <div class="filter-button-container">
+                        <button class="btn btn-primary apply-filters-btn" id="apply-filters">Aplicar Filtros</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Métricas Principais -->
+        <div class="row mb-4">
+            <div class="col-md-2">
+                <div class="metric-card">
+                    <div class="metric-title">Total de Vendas</div>
+                    <div class="metric-value total-sales" id="total-sales">R$ 0</div>
+                    <div class="metric-change" id="sales-change">+0% vs período anterior</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="metric-card">
+                    <div class="metric-title">Total de Pedidos</div>
+                    <div class="metric-value total-orders" id="total-orders">0</div>
+                    <div class="metric-change" id="orders-change">+0% vs período anterior</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="metric-card">
+                    <div class="metric-title">Ticket Médio</div>
+                    <div class="metric-value avg-ticket" id="avg-ticket">R$ 0</div>
+                    <div class="metric-change" id="ticket-change">+0% vs período anterior</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="metric-card">
+                    <div class="metric-title">Clientes Únicos</div>
+                    <div class="metric-value unique-customers" id="unique-customers">0</div>
+                    <div class="metric-change" id="customers-change">+0% vs período anterior</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="metric-card">
+                    <div class="metric-title">Média de Itens</div>
+                    <div class="metric-value avg-items" id="avg-items">0</div>
+                    <div class="metric-change" id="items-change">+0% vs período anterior</div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="metric-card">
+                    <div class="metric-title">Taxa de Crescimento</div>
+                    <div class="metric-value" id="growth-rate">0%</div>
+                    <div class="metric-change">YoY</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row">
+            <!-- Tendência Temporal -->
+            <div class="col-md-8">
+                <div class="chart-container">
+                    <h4>Tendência de Vendas ao Longo do Tempo</h4>
+                    <canvas id="sales-trend-chart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Segmentos de Clientes -->
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h4>Vendas por Segmento</h4>
+                    <canvas id="segment-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Categorias de Produtos -->
+            <div class="col-md-4">
+                <div class="chart-container">
+                    <h4>Vendas por Categoria</h4>
+                    <canvas id="category-chart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Top Produtos -->
+            <div class="col-md-8">
+                <div class="chart-container">
+                    <h4>Top Produtos por Vendas</h4>
+                    <canvas id="top-products-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Mapa Geográfico (simulado) -->
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h4>Vendas por Região</h4>
+                    <canvas id="region-chart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Modos de Envio -->
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h4>Distribuição por Modo de Envio</h4>
+                    <canvas id="ship-mode-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Dados -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="chart-container table-card">
+                    <h4>Detalhes das Vendas</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Cliente</th>
+                                    <th>Produto</th>
+                                    <th>Categoria</th>
+                                    <th>Região</th>
+                                    <th>Vendas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-table-body">
+                                <!-- Dados serão preenchidos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let salesData = [
+            { id: 1, orderId: "CA-2017-152156", orderDate: "2017-11-08", shipDate: "2017-11-11", shipMode: "Second Class", customerId: "CG-12520", customerName: "Claire Gute", segment: "Consumer", country: "United States", city: "Henderson", state: "Kentucky", postalCode: "42420", region: "South", productId: "FUR-BO-10001798", category: "Furniture", subCategory: "Bookcases", productName: "Bush Somerset Collection Bookcase", sales: 261.96, year: 2017, month: 11 },
+            { id: 2, orderId: "CA-2017-152156", orderDate: "2017-11-08", shipDate: "2017-11-11", shipMode: "Second Class", customerId: "CG-12520", customerName: "Claire Gute", segment: "Consumer", country: "United States", city: "Henderson", state: "Kentucky", postalCode: "42420", region: "South", productId: "FUR-CH-10000454", category: "Furniture", subCategory: "Chairs", productName: "Hon Deluxe Fabric Upholstered Stacking Chairs, Rounded Back", sales: 731.94, year: 2017, month: 11 },
+            { id: 3, orderId: "CA-2017-138688", orderDate: "2017-06-12", shipDate: "2017-06-16", shipMode: "Second Class", customerId: "DV-13045", customerName: "Darrin Van Huff", segment: "Corporate", country: "United States", city: "Los Angeles", state: "California", postalCode: "90036", region: "West", productId: "OFF-LA-10000240", category: "Office Supplies", subCategory: "Labels", productName: "Self-Adhesive Address Labels for Typewriters by Universal", sales: 14.62, year: 2017, month: 6 },
+            { id: 4, orderId: "US-2016-108966", orderDate: "2016-10-11", shipDate: "2016-10-18", shipMode: "Standard Class", customerId: "SO-20335", customerName: "Sean O'Donnell", segment: "Consumer", country: "United States", city: "Fort Lauderdale", state: "Florida", postalCode: "33311", region: "South", productId: "FUR-TA-10000577", category: "Furniture", subCategory: "Tables", productName: "Bretford CR4500 Series Slim Rectangular Table", sales: 957.58, year: 2016, month: 10 },
+            { id: 5, orderId: "US-2016-108966", orderDate: "2016-10-11", shipDate: "2016-10-18", shipMode: "Standard Class", customerId: "SO-20335", customerName: "Sean O'Donnell", segment: "Consumer", country: "United States", city: "Fort Lauderdale", state: "Florida", postalCode: "33311", region: "South", productId: "OFF-ST-10000760", category: "Office Supplies", subCategory: "Storage", productName: "Eldon Fold 'N Roll Cart System", sales: 22.37, year: 2016, month: 10 },
+            { id: 6, orderId: "CA-2015-115812", orderDate: "2015-06-09", shipDate: "2015-06-14", shipMode: "Standard Class", customerId: "BH-11710", customerName: "Brosina Hoffman", segment: "Consumer", country: "United States", city: "Los Angeles", state: "California", postalCode: "90032", region: "West", productId: "FUR-FU-10001487", category: "Furniture", subCategory: "Furnishings", productName: "Eldon Expressions Wood and Plastic Desk Accessories, Cherry Wood", sales: 48.86, year: 2015, month: 6 },
+            { id: 7, orderId: "CA-2015-115812", orderDate: "2015-06-09", shipDate: "2015-06-14", shipMode: "Standard Class", customerId: "BH-11710", customerName: "Brosina Hoffman", segment: "Consumer", country: "United States", city: "Los Angeles", state: "California", postalCode: "90032", region: "West", productId: "OFF-AR-10002833", category: "Office Supplies", subCategory: "Art", productName: "Newell 322", sales: 7.28, year: 2015, month: 6 },
+            { id: 8, orderId: "CA-2015-115812", orderDate: "2015-06-09", shipDate: "2015-06-14", shipMode: "Standard Class", customerId: "BH-11710", customerName: "Brosina Hoffman", segment: "Consumer", country: "United States", city: "Los Angeles", state: "California", postalCode: "90032", region: "West", productId: "TEC-PH-10002275", category: "Technology", subCategory: "Phones", productName: "Mitel 5320 IP Phone VoIP phone", sales: 907.15, year: 2015, month: 6 },
+            { id: 9, orderId: "CA-2015-115812", orderDate: "2015-06-09", shipDate: "2015-06-14", shipMode: "Standard Class", customerId: "BH-11710", customerName: "Brosina Hoffman", segment: "Consumer", country: "United States", city: "Los Angeles", state: "California", postalCode: "90032", region: "West", productId: "OFF-BI-10003910", category: "Office Supplies", subCategory: "Binders", productName: "DXL Angle-View Binders with Locking Rings by Samsill", sales: 18.50, year: 2015, month: 6 },
+            { id: 10, orderId: "CA-2015-115812", orderDate: "2015-06-09", shipDate: "2015-06-14", shipMode: "Standard Class", customerId: "BH-11710", customerName: "Brosina Hoffman", segment: "Consumer", country: "United States", city: "Los Angeles", state: "California", postalCode: "90032", region: "West", productId: "OFF-AP-10002892", category: "Office Supplies", subCategory: "Appliances", productName: "Belkin F5C206VTEL 6 Outlet Surge", sales: 114.90, year: 2015, month: 6 }
+        ];
+
+        async function loadExcel() {
+            async function fetchBuffer(path) {
+                const res = await fetch(path);
+                if (!res.ok) throw new Error(String(res.status));
+                return await res.arrayBuffer();
+            }
+            let buf;
+            try {
+                buf = await fetchBuffer('./baseLimpa.xlsx');
+            } catch (e) {
+                buf = await fetchBuffer('../baseLimpa.xlsx');
+            }
+            const wb = XLSX.read(buf, { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval: null });
+            const out = [];
+            for (const r of rows) {
+                const dt = r['Order Date'] || r['Data do Pedido'] || r['order_date'] || r['OrderDate'];
+                const d = typeof dt === 'string' ? new Date(dt) : (dt instanceof Date ? dt : null);
+                const anoRaw = r['Ano'] ?? r['Year'];
+                const ano = Number.isFinite(Number(anoRaw)) ? Number(anoRaw) : (d && d.getFullYear ? d.getFullYear() : NaN);
+                let mesRaw = r['Mês'] || r['Mes'] || r['Month'];
+                let mes = Number.isFinite(Number(mesRaw)) ? Number(mesRaw) : (d && d.getMonth ? (d.getMonth() + 1) : NaN);
+                const sales = Number(r['Sales'] ?? r['Vendas'] ?? r['Sales Amount'] ?? r['Valor'] ?? 0) || 0;
+                out.push({
+                    id: out.length + 1,
+                    orderId: r['Order ID'] || r['OrderID'] || '',
+                    orderDate: d ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}` : '',
+                    shipDate: r['Ship Date'] || '',
+                    shipMode: r['Ship Mode'] || r['Modo de Envio'] || '',
+                    customerId: r['Customer ID'] || '',
+                    customerName: r['Customer Name'] || r['Cliente'] || '',
+                    segment: r['Segment'] || r['Segmento'] || '',
+                    country: r['Country'] || '',
+                    city: r['City'] || '',
+                    state: r['State'] || '',
+                    postalCode: String(r['Postal Code'] || ''),
+                    region: r['Region'] || r['Região'] || '',
+                    productId: r['Product ID'] || '',
+                    category: r['Category'] || r['Categoria'] || '',
+                    subCategory: r['Sub-Category'] || r['Subcategoria'] || '',
+                    productName: r['Product Name'] || r['Produto'] || r['Nome do Produto'] || '',
+                    sales: sales,
+                    year: Number(ano),
+                    month: Number(mes)
+                });
+            }
+            return out.filter(x => Number.isFinite(x.year) && Number.isFinite(x.month));
+        }
+
+        async function loadData() {
+            try {
+                const d = await loadExcel();
+                if (Array.isArray(d) && d.length > 0) salesData = d;
+            } catch (e) {}
+        }
+
+        // Variáveis globais para os gráficos
+        let salesTrendChart, segmentChart, categoryChart, topProductsChart, regionChart, shipModeChart;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadData();
+            initializeDashboard();
+            setupEventListeners();
+        });
+
+        function initializeDashboard() {
+            updateMetrics();
+            createCharts();
+            updateTable();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('apply-filters').addEventListener('click', function() {
+                applyFilters();
+            });
+
+            document.getElementById('export-csv').addEventListener('click', function() {
+                exportToCSV();
+            });
+
+            document.getElementById('export-pdf').addEventListener('click', function() {
+                exportToPDF();
+            });
+        }
+
+        function applyFilters() {
+            updateMetrics();
+            updateCharts();
+            updateTable();
+        }
+
+        function getFilteredData() {
+            const yearFilter = document.getElementById('year-filter').value;
+            const regionFilter = document.getElementById('region-filter').value;
+            const segmentFilter = document.getElementById('segment-filter').value;
+            const categoryFilter = document.getElementById('category-filter').value;
+            const shipModeFilter = document.getElementById('ship-mode-filter').value;
+            
+            return salesData.filter(item => {
+                return (yearFilter === 'all' || item.year.toString() === yearFilter) &&
+                       (regionFilter === 'all' || item.region === regionFilter) &&
+                       (segmentFilter === 'all' || item.segment === segmentFilter) &&
+                       (categoryFilter === 'all' || item.category === categoryFilter) &&
+                       (shipModeFilter === 'all' || item.shipMode === shipModeFilter);
+            });
+        }
+
+        function updateMetrics() {
+            const filteredData = getFilteredData();
+            
+            // Calcular métricas
+            const totalSales = filteredData.reduce((sum, item) => sum + item.sales, 0);
+            const totalOrders = new Set(filteredData.map(item => item.orderId)).size;
+            const avgTicket = totalOrders > 0 ? totalSales / totalOrders : 0;
+            const uniqueCustomers = new Set(filteredData.map(item => item.customerId)).size;
+            const avgItems = filteredData.length / totalOrders;
+            
+            // Atualizar elementos HTML
+            document.getElementById('total-sales').textContent = `R$ ${totalSales.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('total-orders').textContent = totalOrders.toLocaleString('pt-BR');
+            document.getElementById('avg-ticket').textContent = `R$ ${avgTicket.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('unique-customers').textContent = uniqueCustomers.toLocaleString('pt-BR');
+            document.getElementById('avg-items').textContent = avgItems.toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            
+            // Calcular mudanças percentuais (simuladas)
+            const salesChange = (Math.random() * 20 - 5).toFixed(1);
+            const ordersChange = (Math.random() * 15 - 5).toFixed(1);
+            const ticketChange = (Math.random() * 10 - 3).toFixed(1);
+            const customersChange = (Math.random() * 12 - 4).toFixed(1);
+            const itemsChange = (Math.random() * 8 - 2).toFixed(1);
+            const growthRate = (Math.random() * 15 + 5).toFixed(1);
+            
+            document.getElementById('sales-change').textContent = `${salesChange > 0 ? '+' : ''}${salesChange}% vs período anterior`;
+            document.getElementById('orders-change').textContent = `${ordersChange > 0 ? '+' : ''}${ordersChange}% vs período anterior`;
+            document.getElementById('ticket-change').textContent = `${ticketChange > 0 ? '+' : ''}${ticketChange}% vs período anterior`;
+            document.getElementById('customers-change').textContent = `${customersChange > 0 ? '+' : ''}${customersChange}% vs período anterior`;
+            document.getElementById('items-change').textContent = `${itemsChange > 0 ? '+' : ''}${itemsChange}% vs período anterior`;
+            document.getElementById('growth-rate').textContent = `${growthRate}%`;
+        }
+
+        function createCharts() {
+            const filteredData = getFilteredData();
+            
+            // Gráfico de Tendência Temporal
+            const salesByMonth = {};
+            filteredData.forEach(item => {
+                const key = `${item.year}-${item.month.toString().padStart(2, '0')}`;
+                if (!salesByMonth[key]) {
+                    salesByMonth[key] = 0;
+                }
+                salesByMonth[key] += item.sales;
+            });
+            
+            const months = Object.keys(salesByMonth).sort();
+            const salesDataPoints = months.map(month => salesByMonth[month]);
+            
+            const salesTrendCtx = document.getElementById('sales-trend-chart').getContext('2d');
+            salesTrendChart = new Chart(salesTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Vendas',
+                        data: salesDataPoints,
+                        borderColor: '#4dabf5',
+                        backgroundColor: 'rgba(77, 171, 245, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Mês'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Vendas (R$)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Segmentos
+            const salesBySegment = {};
+            filteredData.forEach(item => {
+                if (!salesBySegment[item.segment]) {
+                    salesBySegment[item.segment] = 0;
+                }
+                salesBySegment[item.segment] += item.sales;
+            });
+            
+            const segmentCtx = document.getElementById('segment-chart').getContext('2d');
+            segmentChart = new Chart(segmentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(salesBySegment),
+                    datasets: [{
+                        data: Object.values(salesBySegment),
+                        backgroundColor: [
+                            '#4dabf5',
+                            '#51cf66',
+                            '#ffd43b'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Categorias
+            const salesByCategory = {};
+            filteredData.forEach(item => {
+                if (!salesByCategory[item.category]) {
+                    salesByCategory[item.category] = 0;
+                }
+                salesByCategory[item.category] += item.sales;
+            });
+            
+            const categoryCtx = document.getElementById('category-chart').getContext('2d');
+            categoryChart = new Chart(categoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(salesByCategory),
+                    datasets: [{
+                        data: Object.values(salesByCategory),
+                        backgroundColor: [
+                            '#4dabf5',
+                            '#51cf66',
+                            '#ffd43b'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Top Produtos
+            const topN = parseInt(document.getElementById('top-n-filter').value);
+            const salesByProduct = {};
+            filteredData.forEach(item => {
+                if (!salesByProduct[item.productName]) {
+                    salesByProduct[item.productName] = 0;
+                }
+                salesByProduct[item.productName] += item.sales;
+            });
+            
+            const topProducts = Object.entries(salesByProduct)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, topN);
+            const fullProductNames = topProducts.map(item => item[0]);
+            const displayLabels = fullProductNames.map((name, idx) => {
+                const m = /^Product\s+\d+$/i.test(name);
+                return m ? name : `Product ${idx + 1}`;
+            });
+            
+            const topProductsCtx = document.getElementById('top-products-chart').getContext('2d');
+            topProductsChart = new Chart(topProductsCtx, {
+                type: 'bar',
+                data: {
+                    labels: displayLabels,
+                    datasets: [{
+                        label: 'Vendas (R$)',
+                        data: topProducts.map(item => item[1]),
+                        backgroundColor: '#4dabf5',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: (items) => [fullProductNames[items[0].dataIndex]],
+                                label: (ctx) => {
+                                    const v = ctx.parsed.y;
+                                    return `Vendas (R$): ${v.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Produtos'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Vendas (R$)'
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            
+            // Gráfico de Regiões
+            const salesByRegion = {};
+            filteredData.forEach(item => {
+                if (!salesByRegion[item.region]) {
+                    salesByRegion[item.region] = 0;
+                }
+                salesByRegion[item.region] += item.sales;
+            });
+            
+            const regionCtx = document.getElementById('region-chart').getContext('2d');
+            regionChart = new Chart(regionCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(salesByRegion),
+                    datasets: [{
+                        label: 'Vendas (R$)',
+                        data: Object.values(salesByRegion),
+                        backgroundColor: [
+                            '#4dabf5',
+                            '#51cf66',
+                            '#ffd43b',
+                            '#ff6b6b'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Regiões'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Vendas (R$)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de Modos de Envio - CORREÇÃO APLICADA
+            const salesByShipMode = {};
+            filteredData.forEach(item => {
+                if (!salesByShipMode[item.shipMode]) {
+                    salesByShipMode[item.shipMode] = 0;
+                }
+                salesByShipMode[item.shipMode] += item.sales;
+            });
+            
+            const shipModeCtx = document.getElementById('ship-mode-chart').getContext('2d');
+            shipModeChart = new Chart(shipModeCtx, {
+                type: 'pie', // Mudei de 'polarArea' para 'pie' para garantir círculo perfeito
+                data: {
+                    labels: Object.keys(salesByShipMode),
+                    datasets: [{
+                        data: Object.values(salesByShipMode),
+                        backgroundColor: [
+                            '#4dabf5',
+                            '#51cf66',
+                            '#ffd43b',
+                            '#ff6b6b'
+                        ],
+                        borderWidth: 1,
+                        borderColor: '#1e1e1e'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    },
+                    // Configurações específicas para garantir círculo perfeito
+                    aspectRatio: 1,
+                    cutout: '0%' // Garante que não há buraco no meio (para doughnut seria diferente)
+                }
+            });
+        }
+
+        function updateCharts() {
+            // Destruir gráficos existentes
+            if (salesTrendChart) salesTrendChart.destroy();
+            if (segmentChart) segmentChart.destroy();
+            if (categoryChart) categoryChart.destroy();
+            if (topProductsChart) topProductsChart.destroy();
+            if (regionChart) regionChart.destroy();
+            if (shipModeChart) shipModeChart.destroy();
+            
+            // Recriar gráficos com dados filtrados
+            createCharts();
+        }
+
+        function updateTable() {
+            const filteredData = getFilteredData();
+            const tableBody = document.getElementById('sales-table-body');
+            tableBody.innerHTML = '';
+            
+            // Limitar a exibição para as primeiras 10 linhas
+            const displayData = filteredData.slice(0, 10);
+            
+            displayData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.orderDate}</td>
+                    <td>${item.customerName}</td>
+                    <td>${item.productName}</td>
+                    <td>${item.category}</td>
+                    <td>${item.region}</td>
+                    <td>R$ ${item.sales.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function exportToCSV() {
+            const filteredData = getFilteredData();
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            // Cabeçalhos
+            const headers = ["ID", "Data do Pedido", "Cliente", "Produto", "Categoria", "Subcategoria", "Região", "Segmento", "Vendas"];
+            csvContent += headers.join(",") + "\n";
+            
+            // Dados
+            filteredData.forEach(item => {
+                const row = [
+                    item.id,
+                    item.orderDate,
+                    `"${item.customerName}"`,
+                    `"${item.productName}"`,
+                    item.category,
+                    item.subCategory,
+                    item.region,
+                    item.segment,
+                    item.sales.toFixed(2)
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+            
+            // Criar link de download
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "vendas.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        async function exportToPDF() {
+            // Implementação completa de exportação para PDF com gráficos e insights
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 15;
+            let cursorY = margin;
+
+            // Dados filtrados e métricas
+            const filteredData = getFilteredData();
+            const totalSales = filteredData.reduce((sum, item) => sum + item.sales, 0);
+            const totalOrders = new Set(filteredData.map(item => item.orderId)).size;
+            const avgTicket = totalOrders > 0 ? totalSales / totalOrders : 0;
+            const uniqueCustomers = new Set(filteredData.map(item => item.customerId)).size;
+            const avgItems = totalOrders > 0 ? (filteredData.length / totalOrders) : 0;
+
+            // Título
+            pdf.setFont('helvetica', 'bold');
+            pdf.setFontSize(18);
+            pdf.setTextColor(33);
+            pdf.text('Relatório de Vendas - Dashboard', margin, cursorY);
+            cursorY += 8;
+            pdf.setFontSize(11);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`Data do relatório: ${new Date().toLocaleDateString('pt-BR')}`, margin, cursorY);
+            cursorY += 6;
+            pdf.setDrawColor(77, 171, 245); // alinhado ao accent do dashboard
+            pdf.line(margin, cursorY, pageWidth - margin, cursorY);
+            cursorY += 8;
+
+            // Métricas principais (grid 2 colunas)
+            pdf.setFontSize(12);
+            const metricLines = [
+                `Total de Vendas: R$ ${totalSales.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`,
+                `Total de Pedidos: ${totalOrders.toLocaleString('pt-BR')}`,
+                `Ticket Médio: R$ ${avgTicket.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`,
+                `Clientes Únicos: ${uniqueCustomers.toLocaleString('pt-BR')}`,
+                `Média de Itens por Pedido: ${avgItems.toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1})}`
+            ];
+            const colX = [margin, pageWidth/2 + 2];
+            let rowY = cursorY;
+            for (let i = 0; i < metricLines.length; i++) {
+                const colIndex = i % 2;
+                pdf.text(metricLines[i], colX[colIndex], rowY);
+                if (colIndex === 1) rowY += 6;
+            }
+            cursorY = rowY + 6;
+
+            // Insights
+            const aggregateSum = (arr, key) => arr.reduce((acc, it) => { acc[it[key]] = (acc[it[key]] || 0) + it.sales; return acc; }, {});
+            const topFromObj = (obj) => Object.entries(obj).sort((a,b) => b[1]-a[1])[0]?.[0] || '-';
+            const topSegment = topFromObj(aggregateSum(filteredData, 'segment'));
+            const topCategory = topFromObj(aggregateSum(filteredData, 'category'));
+            const topRegion = topFromObj(aggregateSum(filteredData, 'region'));
+            const topProduct = topFromObj(aggregateSum(filteredData, 'productName'));
+
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Insights e Análises', margin, cursorY);
+            cursorY += 6;
+            pdf.setFont('helvetica', 'normal');
+            const insights = [
+                `Segmento com maior vendas: ${topSegment}`,
+                `Categoria líder: ${topCategory}`,
+                `Região com maior desempenho: ${topRegion}`,
+                `Produto destaque: ${topProduct}`
+            ];
+            insights.forEach(line => { pdf.text(`• ${line}`, margin, cursorY); cursorY += 6; });
+            cursorY += 4;
+
+            // Tabela de Dados (Top 15 linhas)
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Detalhes das Vendas (Top 15)', margin, cursorY);
+            cursorY += 6;
+            const head = [['Data', 'Cliente', 'Produto', 'Categoria', 'Região', 'Vendas (R$)']];
+            const body = filteredData.slice(0, 15).map(item => [
+                item.orderDate,
+                item.customerName,
+                item.productName,
+                item.category,
+                item.region,
+                item.sales.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+            ]);
+            pdf.autoTable({
+                head,
+                body,
+                startY: cursorY,
+                styles: { fontSize: 9, cellPadding: 2 },
+                headStyles: { fillColor: [77, 171, 245], textColor: 255, halign: 'left' },
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+                theme: 'striped',
+                margin: { left: margin, right: margin }
+            });
+            cursorY = (pdf.lastAutoTable && pdf.lastAutoTable.finalY) ? pdf.lastAutoTable.finalY + 8 : cursorY + 8;
+
+            // Função auxiliar para adicionar imagens de gráficos
+            const addCanvasImage = async (canvasId, title) => {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) return;
+                const imgData = canvas.toDataURL('image/png', 1.0);
+                const imgProps = pdf.getImageProperties(imgData);
+                const maxWidth = pageWidth - margin * 2;
+                const mmHeight = (imgProps.height / imgProps.width) * maxWidth;
+
+                // Nova página se não couber
+                if (cursorY + mmHeight + 12 > pageHeight - margin) {
+                    pdf.addPage();
+                    cursorY = margin;
+                }
+
+                pdf.setFont('helvetica', 'bold');
+                pdf.text(title, margin, cursorY);
+                cursorY += 6;
+                pdf.addImage(imgData, 'PNG', margin, cursorY, maxWidth, mmHeight, undefined, 'FAST');
+                cursorY += mmHeight + 8;
+            };
+
+            // Adicionar todos os gráficos
+            await addCanvasImage('sales-trend-chart', 'Tendência de Vendas ao Longo do Tempo');
+            await addCanvasImage('segment-chart', 'Vendas por Segmento');
+            await addCanvasImage('category-chart', 'Vendas por Categoria');
+            await addCanvasImage('top-products-chart', 'Top Produtos por Vendas');
+            await addCanvasImage('region-chart', 'Vendas por Região');
+            await addCanvasImage('ship-mode-chart', 'Distribuição por Modo de Envio');
+
+            // Rodapé
+            pdf.setFontSize(9);
+            pdf.setTextColor(120);
+            pdf.text(`Gerado em ${new Date().toLocaleString('pt-BR')}`, margin, pageHeight - 8);
+
+            pdf.save('relatorio_vendas.pdf');
+        }
+    </script>
+</body>
+</html>
